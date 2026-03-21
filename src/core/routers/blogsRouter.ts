@@ -1,32 +1,21 @@
 import express,{Request,Response} from 'express';
 import {HttpStatus} from "../https-statuses/httpStatuses";
-import {blogs} from "../db/dbBlogs"
+import {blogs} from "../../db/dbBlogs"
 import {BlogViewModel} from "../types/blogersModel";
+import {FieldError} from "../types/ErrorsModel";
+import {findAllBlogs} from "./handlers/blogs/findAllBlogs";
+import {getBlogById} from "./handlers/blogs/findBlogsById";
+import {createBlog} from "./handlers/blogs/createBlogs";
+import {adminGuard} from "../middlewares/admin.guard";
+import {blogsValidation} from "../middlewares/validation/blogs/blogs.validation";
+import {deleteBlogsById} from "./handlers/blogs/deleteBlogsById";
+import {updateBlogById} from "./handlers/blogs/updateBlogs";
 
 export const blogsRouter = express.Router();
 
-blogsRouter.
-get('/', (req: Request, res: Response) => {
-
-    res.status(HttpStatus.Ok).send(blogs);
-})
-.get(`/:id`, (req: Request, res: Response) => {
-    const blogsId=req.params.id;
-    if(!blogsId){
-        res.status(HttpStatus.NotFound).send('No blog found');
-        return;
-    }
-    const blogWithSeacrhedId:BlogViewModel|undefined=blogs.find(blog=>blog.id===blogsId);
-    if(!blogWithSeacrhedId){
-        res.status(HttpStatus.NotFound).send('No blog found');
-        return;
-    }
-
-    res.status(HttpStatus.Ok).send(blogWithSeacrhedId);
-})
-.post('/', (req: Request, res: Response) => {
-
-
-
-    res.status(HttpStatus.Created).send(blogs);
-})
+blogsRouter
+    .get('/', findAllBlogs)
+.get(`/:id`,getBlogById)
+.post('/', adminGuard,blogsValidation, createBlog)
+.put(`/:id`,adminGuard,blogsValidation, updateBlogById)
+.delete(`/:id`,adminGuard,deleteBlogsById)

@@ -1,4 +1,4 @@
-import {PostViewModel} from "../types/postsModel";
+import {PostViewModel} from "../core/types/postsModel";
 
 const post1: PostViewModel = {
     id: "1",

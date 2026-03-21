@@ -2,12 +2,17 @@ import express,{Express} from "express";
 import {postsRouter} from "./core/routers/postsRouters";
 import {blogsRouter} from "./core/routers/blogsRouter";
 import {testsRouter} from "./core/routers/testsRouter";
+import {Blogs_Path, Posts_Path, Tests_Path} from "./db/paths/paths";
 
 export const setupApp = (app:Express)=>{
     app.use(express.json());
 
-    app.use("/blog",blogsRouter);
-    app.use("/posts", postsRouter);
-    app.use("/testing/all-data", testsRouter);
+    app.get('/', (req,res)=>{
+        res.send('not main page')
+    })
+
+    app.use(Blogs_Path,blogsRouter);
+    app.use(Posts_Path, postsRouter);
+    app.use(Tests_Path, testsRouter);
     return app;
 }
