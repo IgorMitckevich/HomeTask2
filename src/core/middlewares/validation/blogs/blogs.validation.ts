@@ -9,6 +9,7 @@ const blogsValidationName = body("name")
   .withMessage("name is required")
   .isString()
   .withMessage("name must be a string")
+    .trim()
   .isLength({ min: 1, max: 15 })
   .withMessage("name length must be not more than 15 sybmols");
 
@@ -17,6 +18,7 @@ const blogsValidationDescription = body("description")
   .withMessage("description is required")
   .isString()
   .withMessage("description must be a string")
+    .trim()
   .isLength({ min: 1, max: 500 })
   .withMessage("description length must be not more than 500 sybmols");
 
@@ -25,6 +27,7 @@ const blogsValidationWebsiteUrl = body("websiteUrl")
   .withMessage("websiteUrl is required")
   .isString()
   .withMessage("websiteUrl must be a string")
+    .trim()
   .isLength({ min: 1, max: 100 })
   .withMessage("websiteUrl length must be not more than 100 sybmols")
   .matches("https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$")
