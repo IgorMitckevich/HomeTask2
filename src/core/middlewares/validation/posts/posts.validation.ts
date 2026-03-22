@@ -22,10 +22,10 @@ export const postsValidationBlogId=body('blogId')
     .isString().withMessage('blogId must be a string')
 
 
-export const postValidation={
+export const postValidation=[
     postsValidationTitle,
     postsValidationShortDescription,
     postsValidationContent,
     postsValidationBlogId
-}
+]
 

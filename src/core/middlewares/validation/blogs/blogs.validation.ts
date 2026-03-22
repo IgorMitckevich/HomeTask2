@@ -1,4 +1,5 @@
 import {param,body} from "express-validator";
+import {APIErrorResult, FieldError} from "../../../types/ErrorsModel";
 
 
 // export const blogsValidationId=param('Id')
@@ -25,3 +26,4 @@ const blogsValidationWebsiteUrl=body('websiteUrl')
 export const blogsValidation=[blogsValidationName,
     blogsValidationDescription,
     blogsValidationWebsiteUrl]
+
