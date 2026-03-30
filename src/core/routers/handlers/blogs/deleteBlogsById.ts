@@ -1,16 +1,27 @@
 import { Response, Request } from "express";
-import { BlogViewModel } from "../../../types/blogersModel";
 import { blogs } from "../../../../db/dbBlogs";
 import { HttpStatus } from "../../../https-statuses/httpStatuses";
+import {blogsRepostirories} from "../../../../blogs/repositories/blogs.repostirories";
+import {BlogViewModel} from "../../../types/blogersModel";
+import {WithId} from "mongodb";
 
-export function deleteBlogsById(req: Request, res: Response) {
-  const id = req.params.id;
+export async function deleteBlogsById(req: Request, res: Response):Promise<void> {
 
-  const blogIndex: string = String(blogs.findIndex((b) => b.id === id));
-  if (blogIndex === "-1") {
-    res.sendStatus(HttpStatus.NotFound);
-  }
+ try{
+     const id :string=req.params.id as string ;
 
-  blogs.splice(+blogIndex, 1);
-  res.sendStatus(HttpStatus.NoContent);
+     const FoundedBlog: WithId<BlogViewModel>|null =  await blogsRepostirories.findById(id);
+     if (!FoundedBlog) {
+         res.sendStatus(HttpStatus.NotFound);
+         return;
+     }
+
+     await blogsRepostirories.delete(id)
+     res.sendStatus(HttpStatus.NoContent);
+
+ }catch(error){
+     res.sendStatus(HttpStatus.InternalServerError)
+ }
+
+
 }

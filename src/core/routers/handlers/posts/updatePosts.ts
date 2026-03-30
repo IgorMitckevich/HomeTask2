@@ -1,19 +1,25 @@
 import { Response, Request } from "express";
 import { HttpStatus } from "../../../https-statuses/httpStatuses";
 import { posts } from "../../../../db/dbPosts";
+import {postsRepostirories} from "../../../../posts/repositories/posts.repostirories";
+import {WithId} from "mongodb";
+import {PostViewModel} from "../../../types/postsModel";
 
-export function updatePostsById(req: Request, res: Response) {
-  const id = req.params.id;
+export async function updatePostsById(req: Request, res: Response) {
 
-  const postsIndex: string = String(posts.findIndex((p) => p.id === id));
-  if (postsIndex === "-1") {
-    res.sendStatus(HttpStatus.NotFound);
+  try{
+    const id = req.params.id as string;
+
+    const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(id);
+    if (!FoundedPost ) {
+      res.sendStatus(HttpStatus.NotFound);
+    }
+    await postsRepostirories.update(id, req.body)
+
+    res.sendStatus(HttpStatus.NoContent);
+  }
+  catch(err){
+    res.sendStatus(HttpStatus.InternalServerError);
   }
 
-  const idNumber = Number(postsIndex);
-  posts[idNumber].title = req.body.title;
-  posts[idNumber].shortDescription = req.body.shortDescription;
-  posts[idNumber].content = req.body.content;
-  posts[idNumber].blogId = req.body.blogId;
-  res.sendStatus(HttpStatus.NoContent);
 }

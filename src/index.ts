@@ -1,11 +1,28 @@
 import express from "express";
 import { setupApp } from "./setup-app";
+import {SETTINGS} from "./core/settings/settings";
+import {runDb} from "./db/mongo.db";
+// import dotenv from "dotenv";
+//
+// dotenv.config();
+const MONGO_URI='mongodb://0.0.0.0:27017';
+// const MONGO_URI = process.env.MONGO_URl ||'mongodb://0.0.0.0:27017';
+console.log(MONGO_URI);
+// console.log(process.env.MONGO_URL)
 
-export const app = express();
-setupApp(app);
+  const server= async ()=>{
+    const app=express();
 
-const PORT = process.env.PORT || 5001;
+     setupApp(app);
 
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
+    const PORT = SETTINGS.PORT;
+    await runDb(SETTINGS.MONGO_URL);
+
+    app.listen(PORT, () => {
+      console.log(`Listening on ${PORT}`);
+    });
+
+    return app;
+
+  }
+  server();

@@ -1,21 +1,19 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../https-statuses/httpStatuses";
-import { posts } from "../../../../db/dbPosts";
-import { PostViewModel } from "../../../types/postsModel";
+import {postsRepostirories} from "../../../../posts/repositories/posts.repostirories";
+import {PostViewModel} from "../../../types/postsModel";
+import {WithId} from "mongodb";
 
-export function findPostsById(req: Request, res: Response) {
-  const postsId = req.params.id;
+export async function findPostsById(req: Request, res: Response) {
+  const postsId = req.params.id as string;
   if (!postsId) {
     res.sendStatus(HttpStatus.NotFound);
     return;
   }
-  const postsWithSeacrhedId: PostViewModel | undefined = posts.find(
-    (posts) => posts.id === postsId,
-  );
-  if (!postsWithSeacrhedId) {
+  const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(postsId);
+  if (!FoundedPost ) {
     res.sendStatus(HttpStatus.NotFound);
-    return;
   }
 
-  res.status(HttpStatus.Ok).send(postsWithSeacrhedId);
+  res.status(HttpStatus.Ok).send(FoundedPost);
 }

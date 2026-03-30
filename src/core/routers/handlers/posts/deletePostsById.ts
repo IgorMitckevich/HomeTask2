@@ -1,15 +1,30 @@
 import { Response, Request } from "express";
 import { posts } from "../../../../db/dbPosts";
 import { HttpStatus } from "../../../https-statuses/httpStatuses";
+import {postsRepostirories} from "../../../../posts/repositories/posts.repostirories";
+import {WithId} from "mongodb";
+import {PostViewModel} from "../../../types/postsModel";
 
-export function deletePostsById(req: Request, res: Response) {
-  const id = req.params.id;
+export async function deletePostsById(req: Request, res: Response) {
 
-  const postsIndex: string = String(posts.findIndex((b) => b.id === id));
-  if (postsIndex === "-1") {
-    res.sendStatus(HttpStatus.NotFound);
+  try{
+    const postsId = req.params.id as string;
+    if (!postsId) {
+      res.sendStatus(HttpStatus.NotFound);
+      return;
+    }
+    const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(postsId);
+    if (!FoundedPost ) {
+      res.sendStatus(HttpStatus.NotFound);
+      return;
+    }
+    await postsRepostirories.delete(postsId)
+    res.sendStatus(HttpStatus.NoContent);
   }
+ catch(err){
+    res.sendStatus(HttpStatus.InternalServerError)
+ }
 
-  posts.splice(+postsIndex, 1);
-  res.sendStatus(HttpStatus.NoContent);
+
+
 }
