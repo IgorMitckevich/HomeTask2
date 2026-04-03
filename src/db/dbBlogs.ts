@@ -6,7 +6,7 @@ export const blogs: BlogViewModel[] = [
     name: "Tech Blog",
     description: "Все о технологиях и программировании",
     websiteUrl: "https://techblog.com",
-    created_at:"1",
+    createdAt:"1",
     isMembership:false
   },
   {
@@ -14,7 +14,7 @@ export const blogs: BlogViewModel[] = [
     name: "Travel Stories",
     description: "Путешествия по всему миру",
     websiteUrl: "https://travelstories.com",
-    created_at:"2",
+    createdAt:"2",
     isMembership:false
   },
   {
@@ -22,7 +22,7 @@ export const blogs: BlogViewModel[] = [
     name: "Food & Recipes",
     description: "Вкусные рецепты и кулинарные советы",
     websiteUrl: "https://foodrecipes.com",
-    created_at:"3",
+    createdAt:"3",
     isMembership:false
   },
   {
@@ -30,7 +30,7 @@ export const blogs: BlogViewModel[] = [
     name: "Fitness Life",
     description: "Здоровый образ жизни и тренировки",
     websiteUrl: "https://fitnesslife.com",
-    created_at:"4",
+    createdAt:"4",
     isMembership:false
   },
   {
@@ -38,7 +38,7 @@ export const blogs: BlogViewModel[] = [
     name: "Business News",
     description: "Актуальные новости бизнеса",
     websiteUrl: "https://businessnews.com",
-    created_at:"5",
+    createdAt:"5",
     isMembership:false
   },
 ];

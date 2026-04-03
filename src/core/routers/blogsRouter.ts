@@ -17,7 +17,7 @@ blogsRouter
   .post(
     "/",
     adminGuard,
-    mongoId,
+    // mongoId,
     blogsValidation,
     inputValidationResultMiddleware,
     createBlog,
@@ -25,7 +25,7 @@ blogsRouter
   .put(
     `/:id`,
     adminGuard,
-      mongoId,
+      // mongoId,
     blogsValidation,
     inputValidationResultMiddleware,
     updateBlogById,

@@ -1,23 +1,23 @@
 import { Response, Request } from "express";
-import { FieldError } from "../../../types/ErrorsModel";
 import { HttpStatus } from "../../../https-statuses/httpStatuses";
-import {BlogViewModel} from "../../../types/blogersModel";
+import {BlogInputModel, BlogViewModel} from "../../../types/blogersModel";
 import { blogs } from "../../../../db/dbBlogs";
 import {blogsRepostirories} from "../../../../blogs/repositories/blogs.repostirories";
-import {posts} from "../../../../db/dbPosts";
 import {blogsMap} from "../../mappers/blogsMap";
+import {ObjectId} from "mongodb";
 
 
-export async function createBlog(req: Request, res: Response):Promise<void>  {
+
+export async function createBlog(req: Request<{},{},BlogInputModel>, res: Response):Promise<void>  {
 
     try{
 
     const newBlog: BlogViewModel = {
-    id:blogs.length ? blogs[blogs.length - 1].id + "1" : "1",
+    id:new ObjectId().toString(),
     name: req.body.name,
     description: req.body.description,
     websiteUrl: req.body.websiteUrl,
-     created_at: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
      isMembership: false
   };
 

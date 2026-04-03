@@ -11,9 +11,7 @@ export async function getBlogById(req: Request, res: Response):Promise<BlogViewM
     return;
   }
   const blogFind:WithId<BlogViewModel>|null= await blogsRepostirories.findById(blogsId);
-  // const blogWithSeacrhedId: BlogViewModel | undefined = blogs.find(
-  //   (blog) => blog.id === blogsId,
-  // );
+
   if (!blogFind) {
     res.sendStatus(HttpStatus.NotFound);
     return;

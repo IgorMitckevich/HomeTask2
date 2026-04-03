@@ -5,11 +5,11 @@ import {ObjectId, WithId} from "mongodb";
 
 export const postsRepostirories = {
     async findAll(): Promise<WithId<PostViewModel>[]> {
-        return postsCollection.find().toArray();
+        return postsCollection.find({},{projection:{_id:0}}).toArray();
     },
     async findById(id: string): Promise<WithId<PostViewModel>|null> {
 
-        return postsCollection.findOne({_id: new ObjectId(id)});
+        return postsCollection.findOne({id:id},{projection:{_id:0}});
     },
     async create(newPosts: PostViewModel):Promise<WithId<PostViewModel>> {
         const createPost=await postsCollection.insertOne(newPosts);
@@ -18,7 +18,7 @@ export const postsRepostirories = {
     async update(id: string, postsInputBody: PostInputModel): Promise<void> {
 
         const updatePost=await postsCollection.updateOne(
-            {_id: new ObjectId(id)},
+            {id:id},
             {$set:{
                 title:postsInputBody.title,
                 shortDescription:postsInputBody.shortDescription,
@@ -35,7 +35,7 @@ export const postsRepostirories = {
         return;
     },
     async delete(id:string):Promise<void>{
-    const deletePost=await postsCollection.deleteOne({_id:new ObjectId(id)})
+    const deletePost=await postsCollection.deleteOne({id:id})
     if(deletePost.deletedCount<1){
         throw new Error("blogs not found");
     }

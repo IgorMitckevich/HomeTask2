@@ -1,11 +1,11 @@
 import { Response, Request } from "express";
 import { HttpStatus } from "../../../https-statuses/httpStatuses";
-import { posts } from "../../../../db/dbPosts";
+
 import {postsRepostirories} from "../../../../posts/repositories/posts.repostirories";
 import {WithId} from "mongodb";
-import {PostViewModel} from "../../../types/postsModel";
+import {PostInputModel, PostViewModel} from "../../../types/postsModel";
 
-export async function updatePostsById(req: Request, res: Response) {
+export async function updatePostsById(req: Request<{id:string},{},PostInputModel>, res: Response) {
 
   try{
     const id = req.params.id as string;
@@ -13,6 +13,7 @@ export async function updatePostsById(req: Request, res: Response) {
     const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(id);
     if (!FoundedPost ) {
       res.sendStatus(HttpStatus.NotFound);
+      return;
     }
     await postsRepostirories.update(id, req.body)
 

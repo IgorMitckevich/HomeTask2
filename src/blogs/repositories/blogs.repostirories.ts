@@ -1,25 +1,36 @@
 import { BlogInputModel, BlogViewModel } from "../../core/types/blogersModel";
 import { blogsCollection} from "../../db/mongo.db";
 import {ObjectId,WithId} from "mongodb";
-import {blogsMap} from "../../core/routers/mappers/blogsMap";
+
 
 export const blogsRepostirories = {
   async findAll(): Promise<WithId<BlogViewModel>[]> {
 
-    return blogsCollection.find().toArray();
+    return blogsCollection.find({},{projection:{_id:0}}).toArray();
   },
   async findById(id: string): Promise<WithId<BlogViewModel>| null> {
 
-    return blogsCollection.findOne({_id: new ObjectId(id)});
+    return blogsCollection.findOne({id:id},{projection:{_id:0}});
   },
   async create(newBlog: BlogViewModel):Promise<WithId<BlogViewModel>> {
-    const insertBlogs= await blogsCollection.insertOne(newBlog);
-    return {...newBlog,_id:insertBlogs.insertedId};
+
+    const BlogToInsert= {
+      id: newBlog.id,
+      name: newBlog.name,
+      description: newBlog.description,
+      websiteUrl: newBlog.websiteUrl,
+      createdAt: newBlog.createdAt,
+      isMembership: newBlog.isMembership
+    }
+
+    const insertBlogs= await blogsCollection.insertOne(BlogToInsert);
+
+    return {...BlogToInsert,_id:insertBlogs.insertedId};
   },
   async update(id: string, blogsInputBody: BlogInputModel): Promise<void> {
 
     const updateResult= await blogsCollection.updateOne(
-        {_id: new ObjectId(id)},{
+        {id: id},{
     $set:{
       name : blogsInputBody.name,
      description : blogsInputBody.description,
@@ -33,7 +44,7 @@ export const blogsRepostirories = {
     return;
   },
   async delete(id:string):Promise<void>{
-  const deleteResult= await blogsCollection.deleteOne({_id:new ObjectId(id),});
+  const deleteResult= await blogsCollection.deleteOne({id:id});
   if(deleteResult.deletedCount<1){
     throw new Error("blogs not found");
   }

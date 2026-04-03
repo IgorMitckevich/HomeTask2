@@ -3,10 +3,10 @@ import { HttpStatus } from "../../../https-statuses/httpStatuses";
 import { blogs } from "../../../../db/dbBlogs";
 import {blogsRepostirories} from "../../../../blogs/repositories/blogs.repostirories";
 import {blogsCollection} from "../../../../db/mongo.db";
-import {BlogViewModel} from "../../../types/blogersModel";
+import {BlogInputModel, BlogViewModel} from "../../../types/blogersModel";
 import {WithId} from "mongodb";
 
-export async function updateBlogById(req: Request, res: Response):Promise<void> {
+export async function updateBlogById(req: Request<{id:string},{},BlogInputModel>, res: Response):Promise<void> {
   try{
     const id = req.params.id as string;
 

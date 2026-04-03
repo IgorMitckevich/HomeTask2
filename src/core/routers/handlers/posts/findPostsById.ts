@@ -4,13 +4,14 @@ import {postsRepostirories} from "../../../../posts/repositories/posts.repostiro
 import {PostViewModel} from "../../../types/postsModel";
 import {WithId} from "mongodb";
 
+
 export async function findPostsById(req: Request, res: Response) {
-  const postsId = req.params.id as string;
-  if (!postsId) {
+  const id = req.params.id as string;
+  if (!id) {
     res.sendStatus(HttpStatus.NotFound);
     return;
   }
-  const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(postsId);
+  const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(id);
   if (!FoundedPost ) {
     res.sendStatus(HttpStatus.NotFound);
   }

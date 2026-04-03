@@ -9,10 +9,7 @@ export async function deletePostsById(req: Request, res: Response) {
 
   try{
     const postsId = req.params.id as string;
-    if (!postsId) {
-      res.sendStatus(HttpStatus.NotFound);
-      return;
-    }
+
     const FoundedPost:WithId<PostViewModel>|null = await postsRepostirories.findById(postsId);
     if (!FoundedPost ) {
       res.sendStatus(HttpStatus.NotFound);
