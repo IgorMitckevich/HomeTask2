@@ -1,8 +1,6 @@
 import { Collection, Db, MongoClient } from 'mongodb';
-import {blogs} from './dbBlogs'
-import {posts} from "./dbPosts";
-import {BlogViewModel} from "../core/types/blogersModel";
-import {PostViewModel} from "../core/types/postsModel";
+import {BlogViewModel} from "../blogs/types/blogersModel";
+import {PostViewModel} from "../posts/types/postsModel";
 import {SETTINGS} from "../core/settings/settings";
 
 
@@ -31,9 +29,9 @@ export async function runDb(url:string):Promise<void> {
 
 
 }
-export async function stopDb() {
-    if (!client) {
-        throw new Error(` No active client`);
-    }
-    await client.close();
-}
+// export async function stopDb() {
+//     if (!client) {
+//         throw new Error(` No active client`);
+//     }
+//     await client.close();
+// }

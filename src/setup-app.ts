@@ -1,6 +1,6 @@
 import express, { Express } from "express";
-import { postsRouter } from "./core/routers/postsRouters";
-import { blogsRouter } from "./core/routers/blogsRouter";
+import { postsRouter } from "./posts/routers/postsRouters";
+import { blogsRouter } from "./blogs/routers/blogsRouter";
 import { testsRouter } from "./core/routers/testsRouter";
 import { Blogs_Path, Posts_Path, Tests_Path } from "./core/paths/paths";
 

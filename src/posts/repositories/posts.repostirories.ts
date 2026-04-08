@@ -1,15 +1,54 @@
-import {PostInputModel, PostViewModel} from "../../core/types/postsModel";
+import {PostInputModel, PostViewModel} from "../types/postsModel";
 import { postsCollection } from "../../db/mongo.db";
 import {ObjectId, WithId} from "mongodb";
+import {PaginatedOutput} from "../../core/types/Paginated-output";
+import {PaginationType} from "../../core/types/pagination-type";
 
 
 export const postsRepostirories = {
-    async findAll(): Promise<WithId<PostViewModel>[]> {
-        return postsCollection.find({},{projection:{_id:0}}).toArray();
+    async findAll(queryDto:PaginatedOutput): Promise<{items:WithId<PostViewModel>[];totalCount:number}> {
+
+        const {searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+        const filter:any = {};
+        const skip = (pageNumber - 1) * pageSize;
+        if(searchNameTerm){
+            filter.name={$regex:searchNameTerm,$options:"i"}
+        }
+        const [items,totalCount] = await Promise.all([
+            postsCollection
+                .find(filter)
+                .sort({ [sortBy]: sortDirection })
+                .skip(skip)
+                .limit(pageSize)
+                .toArray(),
+            postsCollection.countDocuments(filter),
+        ]);
+
+
+        return {items,totalCount};
     },
     async findById(id: string): Promise<WithId<PostViewModel>|null> {
 
         return postsCollection.findOne({id:id},{projection:{_id:0}});
+    },
+    async findPostsByBlogId(
+        queryDto:PaginatedOutput,
+        blogId:string
+    ):Promise<{items:WithId<PostViewModel>[];totalCount:number}> {
+        const { pageNumber, pageSize, sortBy, sortDirection } = queryDto;
+        const filter = {'blogId': blogId};
+        const skip = (pageNumber - 1) * pageSize;
+
+        const [items,totalCount] = await Promise.all([
+            postsCollection
+                .find(filter)
+                .sort({ [sortBy]: sortDirection })
+                .skip(skip)
+                .limit(pageSize)
+                .toArray(),
+            postsCollection.countDocuments(filter)
+        ]);
+        return { items,totalCount };
     },
     async create(newPosts: PostViewModel):Promise<WithId<PostViewModel>> {
         const createPost=await postsCollection.insertOne(newPosts);

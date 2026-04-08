@@ -1,4 +1,4 @@
-import { BlogViewModel } from "../core/types/blogersModel";
+import { BlogViewModel } from "../blogs/types/blogersModel";
 
 export const blogs: BlogViewModel[] = [
   {

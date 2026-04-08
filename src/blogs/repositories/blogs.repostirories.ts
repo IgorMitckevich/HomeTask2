@@ -1,31 +1,40 @@
-import { BlogInputModel, BlogViewModel } from "../../core/types/blogersModel";
+import { BlogInputModel, BlogViewModel } from "../types/blogersModel";
 import { blogsCollection} from "../../db/mongo.db";
 import {ObjectId,WithId} from "mongodb";
+import {PaginatedOutput} from "../../core/types/Paginated-output";
 
 
 export const blogsRepostirories = {
-  async findAll(): Promise<WithId<BlogViewModel>[]> {
+  async findAll(queryDto:PaginatedOutput): Promise<{items:WithId<BlogViewModel>[];totalCount:number}> {
 
-    return blogsCollection.find({},{projection:{_id:0}}).toArray();
-  },
+      const {searchNameTerm,pageNumber, pageSize, sortBy, sortDirection} = queryDto;
+      const filter:any= {};
+      const skip = (pageNumber - 1) * pageSize;
+    if(searchNameTerm){
+        filter.name={$regex:searchNameTerm,$options:"i"}
+    }
+      const [items,totalCount] = await Promise.all([
+        blogsCollection
+            .find(filter)
+            .sort({[sortBy]: sortDirection})
+            .skip(skip)
+            .limit(pageSize)
+            .toArray(),
+        blogsCollection.countDocuments(filter),
+      ]);
+      // return blogsCollection.find({},{projection:{_id:0}}).toArray();
+    return {items,totalCount}
+     },
   async findById(id: string): Promise<WithId<BlogViewModel>| null> {
 
     return blogsCollection.findOne({id:id},{projection:{_id:0}});
   },
   async create(newBlog: BlogViewModel):Promise<WithId<BlogViewModel>> {
 
-    const BlogToInsert= {
-      id: newBlog.id,
-      name: newBlog.name,
-      description: newBlog.description,
-      websiteUrl: newBlog.websiteUrl,
-      createdAt: newBlog.createdAt,
-      isMembership: newBlog.isMembership
-    }
 
-    const insertBlogs= await blogsCollection.insertOne(BlogToInsert);
+    const insertBlogs= await blogsCollection.insertOne(newBlog);
 
-    return {...BlogToInsert,_id:insertBlogs.insertedId};
+    return {...newBlog,_id:insertBlogs.insertedId};
   },
   async update(id: string, blogsInputBody: BlogInputModel): Promise<void> {
 

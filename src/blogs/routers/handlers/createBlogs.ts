@@ -1,10 +1,9 @@
 import { Response, Request } from "express";
-import { HttpStatus } from "../../../https-statuses/httpStatuses";
-import {BlogInputModel, BlogViewModel} from "../../../types/blogersModel";
-import { blogs } from "../../../../db/dbBlogs";
-import {blogsRepostirories} from "../../../../blogs/repositories/blogs.repostirories";
-import {blogsMap} from "../../mappers/blogsMap";
+import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
+import {BlogInputModel, BlogViewModel} from "../../types/blogersModel";
+import {blogsMap} from "../mappers/blogsMap";
 import {ObjectId} from "mongodb";
+import {blogsService} from "../../application/blogsService";
 
 
 
@@ -21,7 +20,7 @@ export async function createBlog(req: Request<{},{},BlogInputModel>, res: Respon
      isMembership: false
   };
 
-  const createBlog=await blogsRepostirories.create(newBlog);
+  const createBlog=await blogsService.create(newBlog);
  const BlogsViewModel=blogsMap(createBlog)
   res.status(HttpStatus.Created).send(BlogsViewModel);
 } catch (error) {

@@ -1,4 +1,4 @@
-import { PostViewModel } from "../core/types/postsModel";
+import { PostViewModel } from "../posts/types/postsModel";
 
 export const posts: PostViewModel[] = [
   {

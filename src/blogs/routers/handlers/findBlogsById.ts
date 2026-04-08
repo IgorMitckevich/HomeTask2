@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { HttpStatus } from "../../../https-statuses/httpStatuses";
-import {BlogViewModel} from "../../../types/blogersModel";
-import {blogsRepostirories} from "../../../../blogs/repositories/blogs.repostirories";
+import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
+import {BlogViewModel} from "../../types/blogersModel";
+import {blogsRepostirories} from "../../repositories/blogs.repostirories";
 import {WithId} from "mongodb";
+import {blogsService} from "../../application/blogsService";
 
 export async function getBlogById(req: Request, res: Response):Promise<BlogViewModel|void> {
   const blogsId:string = req.params.id as string;
@@ -10,7 +11,7 @@ export async function getBlogById(req: Request, res: Response):Promise<BlogViewM
     res.sendStatus(HttpStatus.NotFound);
     return;
   }
-  const blogFind:WithId<BlogViewModel>|null= await blogsRepostirories.findById(blogsId);
+  const blogFind:WithId<BlogViewModel>|null= await blogsService.findById(blogsId);
 
   if (!blogFind) {
     res.sendStatus(HttpStatus.NotFound);
