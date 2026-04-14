@@ -11,7 +11,7 @@ export const createErrorsMessages = (error: FieldError[]): APIErrorResult => {
   return { errorsMessages: error };
 };
 
-const formatErrors = (error: ValidationError): FieldError => {
+export const formatErrors = (error: ValidationError): FieldError => {
   const expressError = error as unknown as FieldValidationError;
   return {
     field: expressError.path,

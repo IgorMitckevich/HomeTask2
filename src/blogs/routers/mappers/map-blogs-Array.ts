@@ -19,6 +19,7 @@ export function  blogsMapArray(items:WithId<BlogViewModel>[]):BlogViewModel[] {
                 isMembership: items[i].isMembership
             })
         }
+
     return blogs
 }
 

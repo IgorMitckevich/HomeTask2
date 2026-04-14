@@ -1,14 +1,13 @@
 import express, { Request, Response } from "express";
 import { HttpStatus } from "../https-statuses/httpStatuses";
-import {blogs} from "../../db/dbBlogs";
-import {posts} from "../../db/dbPosts";
-import {blogsCollection, postsCollection} from "../../db/mongo.db";
+import {blogsCollection, postsCollection, usersCollection} from "../../db/mongo.db";
 
 export const testsRouter = express.Router();
 
 testsRouter.delete("/", async (req: Request, res: Response) => {
     await blogsCollection.deleteMany({})
     await postsCollection.deleteMany({})
+    await usersCollection.deleteMany({})
 
     res.sendStatus(HttpStatus.NoContent)
 });
