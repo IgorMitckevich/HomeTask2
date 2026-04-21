@@ -6,14 +6,6 @@ import {blogsRepostirories} from "../repositories/blogs.repostirories";
 
 
 export const blogsService = {
-    async findAll(queryDto:PaginatedOutput): Promise<{items:WithId<BlogViewModel>[];totalCount:number}> {
-
-        return blogsRepostirories.findAll(queryDto)
-    },
-    async findById(id: string): Promise<WithId<BlogViewModel>| null> {
-
-        return blogsRepostirories.findById(id);
-    },
     async create(newBlog: BlogViewModel):Promise<WithId<BlogViewModel>> {
 
         const BlogToInsert= {

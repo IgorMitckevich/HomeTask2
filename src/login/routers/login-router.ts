@@ -1,15 +1,18 @@
 import express from "express";
-
 import {createLoginOrEmailAndPassword} from "./handlers/create";
-import {AuthInputValidation} from "../middlewares/validation/validation";
-import {inputValidation} from "../middlewares/validation/errosValidation";
-import {adminGuard} from "../../core/middlewares/admin.guard";
+import {getMe} from "./handlers/getMe";
+import {accessTokenGuard} from "../middlewares/authorization";
+import {Login_Path} from "../../core/paths/paths";
+
 
 
 export const loginRouter=express.Router();
 
 
-loginRouter.post("/", createLoginOrEmailAndPassword)
+loginRouter.post(Login_Path.auth.login, createLoginOrEmailAndPassword)
+    .get(Login_Path.auth.me,
+        accessTokenGuard,
+        getMe)
 
 
 

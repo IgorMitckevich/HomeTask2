@@ -11,6 +11,7 @@ import {formatErrors, inputValidationResultMiddleware} from "../../../core/middl
 export const createUser = async (req: Request<{},{},UserInputModel>, res: Response) => {
     try{
         // const {login,password, email} = req.body;
+
         const newUser:UserInputModel={
             login:req.body.login,
             email:req.body.email,

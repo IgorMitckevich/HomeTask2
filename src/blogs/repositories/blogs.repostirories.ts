@@ -5,31 +5,7 @@ import {PaginatedOutput} from "../../core/types/Paginated-output";
 
 
 export const blogsRepostirories = {
-  async findAll(queryDto:PaginatedOutput): Promise<{items:WithId<BlogViewModel>[];totalCount:number}> {
-
-      const {searchNameTerm,pageNumber, pageSize, sortBy, sortDirection} = queryDto;
-      const filter:any= {};
-      const skip = (pageNumber - 1) * pageSize;
-    if(searchNameTerm){
-        filter.name={$regex:searchNameTerm,$options:"i"}
-    }
-      const [items,totalCount] = await Promise.all([
-        blogsCollection
-            .find(filter)
-            .sort({[sortBy]: sortDirection})
-            .skip(skip)
-            .limit(pageSize)
-            .toArray(),
-        blogsCollection.countDocuments(filter),
-      ]);
-      // return blogsCollection.find({},{projection:{_id:0}}).toArray();
-    return {items,totalCount}
-     },
-  async findById(id: string): Promise<WithId<BlogViewModel>| null> {
-
-    return blogsCollection.findOne({id:id},{projection:{_id:0}});
-  },
-  async create(newBlog: BlogViewModel):Promise<WithId<BlogViewModel>> {
+    async create(newBlog: BlogViewModel):Promise<WithId<BlogViewModel>> {
 
 
     const insertBlogs= await blogsCollection.insertOne(newBlog);

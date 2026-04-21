@@ -1,7 +1,8 @@
 import {Response,Request} from 'express'
 import {LoginInputModel} from "../../type/login-Input-model";
 import {HttpStatus} from "../../../core/https-statuses/httpStatuses";
-import {usersService} from "../../../users/application/users-service";
+import {jwtService} from "../../application/jwt-service";
+import {queryUsersRepositories} from "../../../users/repositories/query-user-repositories";
 
 
 export async function createLoginOrEmailAndPassword(req:Request<{},{},LoginInputModel>,res:Response):Promise<void>{
@@ -11,17 +12,19 @@ export async function createLoginOrEmailAndPassword(req:Request<{},{},LoginInput
 
         const {loginOrEmail,password}=req.body;
 
-        const accessToken=await usersService.findUserByLoginOrEmail(loginOrEmail,password)
-        if(!accessToken){
+        const checkAuthorized=await queryUsersRepositories.getUserByLoginOrEmail(loginOrEmail,password)
+        if(!checkAuthorized){
 
              res.sendStatus(HttpStatus.Unauthorized)
             return
         }
-        res.sendStatus(HttpStatus.NoContent)
-    }
-    catch(err){
+         const accessToken=await jwtService.createUserPass(checkAuthorized);
 
-        res.status(HttpStatus.InternalServerError).send(`${err}`)
+        res.status(HttpStatus.Ok).send({accessToken:accessToken});
+    }
+    catch(err:unknown){
+
+        res.status(HttpStatus.InternalServerError).send(`errormesage:${err}`)
     }
 
 }

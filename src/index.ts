@@ -10,7 +10,7 @@ const MONGO_URI='mongodb://0.0.0.0:27017';
 console.log(MONGO_URI);
 // console.log(process.env.MONGO_URL)
 
-  const server= async ()=>{
+ const server= async ()=>{
     const app=express();
 
      setupApp(app);

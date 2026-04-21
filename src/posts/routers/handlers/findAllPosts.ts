@@ -6,6 +6,7 @@ import {DEFAULT_VALUEST} from "../../../core/middlewares/validation/query-pagina
 import {postsService} from "../../application/posts.service";
 import {mapPostsPaginated} from "../mappers/map-posts-list-paginated-output";
 import {postsMap} from "../mappers/postsMap";
+import {queryPostsRepositories} from "../../repositories/query-posts-repositories";
 
 export async function findAllPosts(req: Request, res: Response) {
   try{
@@ -14,7 +15,7 @@ export async function findAllPosts(req: Request, res: Response) {
           locations: ['query'],
           includeOptionals: true,})
       const queryInput={...sanitizedQuery};
-      const posts=await postsService.findAll(queryInput);
+      const posts=await queryPostsRepositories.getAllPosts(queryInput);
     if (!posts){
          res.sendStatus(HttpStatus.NotFound)
         return

@@ -8,13 +8,15 @@ import {mapPostsPaginated} from "../../../posts/routers/mappers/map-posts-list-p
 import {PostsPaginated} from "../../../posts/types/postPaginated";
 import {PostsQueryInput} from "../../../posts/types/posts-query-input";
 import {matchedData} from "express-validator";
+import {queryBlogsRepositories} from "../../repositories/query-blogs-repositories";
+import {queryPostsRepositories} from "../../../posts/repositories/query-posts-repositories";
 
 export async function getAllPostsByBlogId  (req:Request<{blogId:string},{},{},PostsQueryInput>, res:Response ):Promise<any>
 {
     try{
         const blogsId= req.params.blogId;
 
-        const findBlog= await blogsService.findById(blogsId);
+        const findBlog= await queryBlogsRepositories.getBlogById(blogsId);
             if(!findBlog){
                 return res.sendStatus(HttpStatus.NotFound)
 
@@ -25,15 +27,7 @@ export async function getAllPostsByBlogId  (req:Request<{blogId:string},{},{},Po
         const queryInput={...sanitizedQuery};
 
 
-        const posts=await postsService.findPostsByBlogId(queryInput,blogsId);
-            // if(!posts){
-            //     return res.status(HttpStatus.Ok).send({
-            //         items:[],
-            //         pageNumber:Number(queryInput.pageNumber),
-            //         pageSize: Number(queryInput.pageSize),
-            //         totalCount:0
-            //     });
-            // }
+        const posts=await queryPostsRepositories.getPostsByBlogId(queryInput,blogsId);
 
          const postsOutput:PostsPaginated=mapPostsPaginated(posts,queryInput.pageNumber, queryInput.pageSize)
 

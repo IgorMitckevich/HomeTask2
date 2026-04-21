@@ -1,11 +1,9 @@
 import {Request,Response} from "express";
 import {HttpStatus} from "../../../core/https-statuses/httpStatuses";
-import {usersService} from "../../application/users-service";
 import {mapPaginatorUserViewModel} from "../mappers/map-paginated-users";
 import {matchedData} from "express-validator";
-import {PaginatedOutput} from "../../../core/types/Paginated-output";
 import {PaginatorInput} from "../../types/Paginator-input";
-
+import {queryUsersRepositories} from "../../repositories/query-user-repositories";
 
 
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -17,7 +15,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
             includeOptionals: true,})
 
         const queryInput={...sanitizedQuery}
-        const allUsers = await usersService.getAllUsers(queryInput);
+        const allUsers = await queryUsersRepositories.getUsers(queryInput);
 
         const AllUsersViewModel=mapPaginatorUserViewModel(allUsers, sanitizedQuery.pageNumber, sanitizedQuery.pageSize);
 

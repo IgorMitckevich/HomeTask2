@@ -6,6 +6,7 @@ import {ObjectId} from "mongodb";
 import {postsService} from "../../../posts/application/posts.service";
 import {blogsService} from "../../application/blogsService";
 import {createPosts} from "../../../posts/routers/handlers/createPosts";
+import {queryBlogsRepositories} from "../../repositories/query-blogs-repositories";
 
 
 export async function createPostsByBlogId(req: Request<{blogId:string},{},PostInputModel>, res: Response):Promise<void> {
@@ -13,7 +14,7 @@ export async function createPostsByBlogId(req: Request<{blogId:string},{},PostIn
         const blogId = req.params.blogId;
 
 
-         const FoundedBlog=await blogsService.findById(blogId)
+         const FoundedBlog=await queryBlogsRepositories.getBlogById(blogId)
         if(!FoundedBlog){
             res.sendStatus(HttpStatus.NotFound);
             return;

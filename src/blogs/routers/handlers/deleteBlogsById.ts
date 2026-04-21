@@ -5,13 +5,14 @@ import {blogsRepostirories} from "../../repositories/blogs.repostirories";
 import {BlogViewModel} from "../../types/blogersModel";
 import {WithId} from "mongodb";
 import {blogsService} from "../../application/blogsService";
+import {queryBlogsRepositories} from "../../repositories/query-blogs-repositories";
 
 export async function deleteBlogsById(req: Request, res: Response):Promise<void> {
 
  try{
      const id :string=req.params.id as string ;
 
-     const FoundedBlog: WithId<BlogViewModel>|null =  await blogsService.findById(id);
+     const FoundedBlog: WithId<BlogViewModel>|null =  await queryBlogsRepositories.getBlogById(id);
      if (!FoundedBlog) {
          res.sendStatus(HttpStatus.NotFound);
          return;

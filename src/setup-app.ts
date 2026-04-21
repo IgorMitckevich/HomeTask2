@@ -3,7 +3,7 @@ import { postsRouter } from "./posts/routers/postsRouters";
 import { blogsRouter } from "./blogs/routers/blogsRouter";
 import { testsRouter } from "./core/routers/testsRouter";
 import {
-  Blogs_Path,
+  Blogs_Path, Comments_Path,
   Login_Path,
   Posts_Path,
   Tests_Path,
@@ -11,6 +11,7 @@ import {
 } from "./core/paths/paths";
 import {usersRouter} from './users/routes/users-router'
 import {loginRouter} from "./login/routers/login-router";
+import {comments_router} from "./comment/routers/comments-router";
 
 
 export const setupApp = async (app: Express) => {
@@ -24,6 +25,7 @@ export const setupApp = async (app: Express) => {
   app.use(Posts_Path, postsRouter);
   app.use(Tests_Path, testsRouter);
   app.use(Users_Path, usersRouter);
-  app.use(Login_Path, loginRouter);
+  app.use(Login_Path.common, loginRouter);
+  app.use(Comments_Path,comments_router)
   return app;
 };

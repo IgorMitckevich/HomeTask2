@@ -5,13 +5,14 @@ import {postsMap} from "../mappers/postsMap";
 import {ObjectId} from "mongodb";
 import {postsService} from "../../application/posts.service";
 import {blogsService} from "../../../blogs/application/blogsService";
+import {queryBlogsRepositories} from "../../../blogs/repositories/query-blogs-repositories";
 
 
 export async function createPosts(req: Request<{},{},PostInputModel>, res: Response):Promise<void> {
  try{
    const blogId = req.body.blogId;
 
-   const FoundedBlog=await blogsService.findById(blogId)
+   const FoundedBlog=await queryBlogsRepositories.getBlogById(blogId)
    if(!FoundedBlog){
      res.sendStatus(HttpStatus.BadRequest);
      return;

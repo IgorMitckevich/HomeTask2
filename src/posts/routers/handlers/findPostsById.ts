@@ -4,6 +4,7 @@ import {postsRepostirories} from "../../repositories/posts.repostirories";
 import {PostViewModel} from "../../types/postsModel";
 import {WithId} from "mongodb";
 import {postsService} from "../../application/posts.service";
+import {queryPostsRepositories} from "../../repositories/query-posts-repositories";
 
 
 export async function findPostsById(req: Request, res: Response) {
@@ -12,7 +13,7 @@ export async function findPostsById(req: Request, res: Response) {
     res.sendStatus(HttpStatus.NotFound);
     return;
   }
-  const FoundedPost:WithId<PostViewModel>|null = await postsService.findById(id);
+  const FoundedPost:WithId<PostViewModel>|null =await queryPostsRepositories.getPostById(id);
   if (!FoundedPost ){
     res.sendStatus(HttpStatus.NotFound);
   return;

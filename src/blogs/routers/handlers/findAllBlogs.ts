@@ -8,6 +8,7 @@ import {blogsService} from "../../application/blogsService";
 import {DEFAULT_VALUEST} from "../../../core/middlewares/validation/query-pagination-sorting.vallidation-middleware";
 import {mapPostsPaginated} from "../../../posts/routers/mappers/map-posts-list-paginated-output";
 import {mapBlogsPaginated} from "../mappers/map-blogs-list-paginated-output";
+import {queryBlogsRepositories} from "../../repositories/query-blogs-repositories";
 
 export async function findAllBlogs(req: Request<{},{},{},PaginatedOutput>, res: Response):Promise<void> {
 
@@ -15,7 +16,7 @@ export async function findAllBlogs(req: Request<{},{},{},PaginatedOutput>, res: 
     locations: ['query'],
     includeOptionals: true,})
   const queryInput={...sanitizedQuery};
-  const blogs=await blogsService.findAll(queryInput);
+  const blogs=await queryBlogsRepositories.getAllBlogs(queryInput);
    const BlogsViewModel=mapBlogsPaginated(
        blogs, queryInput.pageNumber, queryInput.pageSize
        );
