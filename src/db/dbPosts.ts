@@ -8,7 +8,7 @@ export const posts: PostViewModel[] = [
     content: "TypeScript - это мощный инструмент... (полный текст статьи)",
     blogId: "1",
     blogName: "Tech Blog",
-    createdAt:"1"
+    createdAt: "1",
   },
   {
     id: "2",
@@ -17,7 +17,7 @@ export const posts: PostViewModel[] = [
     content: "Европа полна удивительных мест... (полный текст статьи)",
     blogId: "2",
     blogName: "Travel Stories",
-    createdAt:"2"
+    createdAt: "2",
   },
   {
     id: "3",
@@ -27,6 +27,6 @@ export const posts: PostViewModel[] = [
       "Для приготовления борща вам понадобится... (полный текст рецепта)",
     blogId: "3",
     blogName: "Food & Recipes",
-    createdAt:"3"
-  }
+    createdAt: "3",
+  },
 ];

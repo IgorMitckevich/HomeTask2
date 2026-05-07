@@ -1,5 +1,3 @@
-
-
-export type LoginSuccesViewModel={
-    accessToken:string,
-}
+export type LoginSuccesViewModel = {
+  accessToken: string;
+};

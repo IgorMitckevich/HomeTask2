@@ -1,6 +1,4 @@
-
-
-export type CommentatorInfo ={
-    userId:string,
-    userLogin:string
-}
+export type CommentatorInfo = {
+  userId: string;
+  userLogin: string;
+};

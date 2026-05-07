@@ -1,7 +1,4 @@
-
-
 export type LoginInputModel = {
-    loginOrEmail: string,
-    password: string
-
-}
+  loginOrEmail: string;
+  password: string;
+};

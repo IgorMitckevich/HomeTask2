@@ -1,5 +1,3 @@
-
-
-export type CommentInputModel={
-    content:string
-}
+export type CommentInputModel = {
+  content: string;
+};

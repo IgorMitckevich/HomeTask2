@@ -1,9 +1,7 @@
-
-
 export type UserViewModelWithPassword = {
-    id: string;
-    login: string;
-    email: string;
-    createdAt: string;
-    password: string;
-}
+  id: string;
+  login: string;
+  email: string;
+  createdAt: string;
+  password: string;
+};

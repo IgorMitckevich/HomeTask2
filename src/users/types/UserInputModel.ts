@@ -1,7 +1,5 @@
-
-
 export type UserInputModel = {
-    login: string;
-    password: string;
-    email: string;
-}
+  login: string;
+  password: string;
+  email: string;
+};

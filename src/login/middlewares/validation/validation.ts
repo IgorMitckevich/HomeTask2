@@ -1,21 +1,26 @@
-import { body} from 'express-validator';
+import { body } from "express-validator";
 
+const loginOrEmailInputPassword = body("loginOrEmail")
+  .exists()
+  .withMessage("loginOrEmail required")
+  .isString()
+  .withMessage("loginOrEmail must be a string value");
+export const AuthInputPassword = body("password")
+  .exists()
+  .withMessage("password required")
+  .isString()
+  .withMessage("password must be a string value")
+  .trim();
 
-const loginOrEmailInputPassword=body('loginOrEmail')
+export const checkingEmail=body("email")
     .exists()
-    .withMessage('loginOrEmail required')
+    .withMessage("checkingEmail required")
     .isString()
-    .withMessage('loginOrEmail must be a string value')
-export const AuthInputPassword=body('password')
-    .exists()
-    .withMessage('password required')
-    .isString()
-    .withMessage('password must be a string value')
-    .trim()
+    .withMessage("checkingEmail must be a string value")
+    .matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+    .withMessage("email must match the specified pattern");
 
-
-
-export const AuthInputValidation=[
-    loginOrEmailInputPassword,
-    AuthInputPassword,
-]
+export const AuthInputValidation = [
+  loginOrEmailInputPassword,
+  AuthInputPassword,
+];

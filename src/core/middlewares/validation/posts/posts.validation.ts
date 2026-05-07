@@ -5,17 +5,16 @@ export const postsValidationTitle = body("title")
   .withMessage("title is required")
   .isString()
   .withMessage("title must be a string")
-    .trim()
+  .trim()
   .isLength({ min: 1, max: 30 })
-  .withMessage("title length must be not more than 30 sybmols")
-
+  .withMessage("title length must be not more than 30 sybmols");
 
 export const postsValidationShortDescription = body("shortDescription")
   .exists()
   .withMessage("shortDescription is required")
   .isString()
   .withMessage("shortDescription must be a string")
-    .trim()
+  .trim()
   .isLength({ min: 1, max: 100 })
   .withMessage("shortDescription length must be not more than 100 sybmols");
 
@@ -24,7 +23,7 @@ export const postsValidationContent = body("content")
   .withMessage("content is required")
   .isString()
   .withMessage("content must be a string")
-    .trim()
+  .trim()
   .isLength({ min: 1, max: 1000 })
   .withMessage("content length must be not more than 1000 sybmols");
 
@@ -35,7 +34,6 @@ export const postsValidationBlogId = body("blogId")
   .withMessage("blogId must be a string");
 
 export const postValidation = [
-
   postsValidationShortDescription,
   postsValidationTitle,
   postsValidationContent,

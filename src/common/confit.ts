@@ -1,8 +1,7 @@
-import {config} from 'dotenv'
+import { config } from "dotenv";
 
-config()
+config();
 
-export const  appConfig={
-
-    SecretKey:process.env.SECRET_KEY as string,
-}
+export const appConfig = {
+  SecretKey: process.env.SECRET_KEY as string,
+};

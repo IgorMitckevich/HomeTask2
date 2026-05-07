@@ -1,10 +1,9 @@
-import {UserViewModel} from "./UserViewModel";
-
+import { UserViewModel } from "./UserViewModel";
 
 export type PaginatorUserViewModel = {
-    pagesCount: number,
-    page:number,
-    pageSize:number,
-    totalCount:number,
-    items:UserViewModel[]
-}
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: UserViewModel[];
+};

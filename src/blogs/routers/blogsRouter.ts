@@ -7,23 +7,21 @@ import { blogsValidation } from "../../core/middlewares/validation/blogs/blogs.v
 import { deleteBlogsById } from "./handlers/deleteBlogsById";
 import { updateBlogById } from "./handlers/updateBlogs";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationBlogs";
-import {paginationAndSortingValidation} from "../../core/middlewares/validation/query-pagination-sorting.vallidation-middleware";
-import {getAllPostsByBlogId} from "./handlers/getsAllPostByBlogId";
-import {createPostsByBlogId} from "./handlers/createPostByBlogId";
+import { paginationAndSortingValidation } from "../../core/middlewares/validation/query-pagination-sorting.vallidation-middleware";
+import { getAllPostsByBlogId } from "./handlers/getsAllPostByBlogId";
+import { createPostsByBlogId } from "./handlers/createPostByBlogId";
 import {
   postsValidationContent,
-  postsValidationShortDescription, postsValidationTitle,
+  postsValidationShortDescription,
+  postsValidationTitle,
 } from "../../core/middlewares/validation/posts/posts.validation";
-import {BlogSortFields} from "../constants/blog-sort-fields";
-import {PostSortFields} from "../../posts/constants/post-sort-fields";
-
+import { BlogSortFields } from "../constants/blog-sort-fields";
+import { PostSortFields } from "../../posts/constants/post-sort-fields";
 
 export const blogsRouter = express.Router();
 
 blogsRouter
-  .get("/",
-      paginationAndSortingValidation(BlogSortFields),
-      findAllBlogs)
+  .get("/", paginationAndSortingValidation(BlogSortFields), findAllBlogs)
   .get(`/:id`, getBlogById)
   .post(
     "/",
@@ -36,22 +34,23 @@ blogsRouter
   .put(
     `/:id`,
     adminGuard,
-      // mongoId,
+    // mongoId,
     blogsValidation,
     inputValidationResultMiddleware,
     updateBlogById,
   )
-  .delete(`/:id`,
-      adminGuard,
-      deleteBlogsById)
-    .get(`/:blogId/posts`,
-        paginationAndSortingValidation(PostSortFields),
-        getAllPostsByBlogId)
-    .post(`/:blogId/posts/`,
-        adminGuard,
-        postsValidationShortDescription,
-        postsValidationTitle,
-        postsValidationContent,
-        inputValidationResultMiddleware,
-        createPostsByBlogId);
-
+  .delete(`/:id`, adminGuard, deleteBlogsById)
+  .get(
+    `/:blogId/posts`,
+    paginationAndSortingValidation(PostSortFields),
+    getAllPostsByBlogId,
+  )
+  .post(
+    `/:blogId/posts/`,
+    adminGuard,
+    postsValidationShortDescription,
+    postsValidationTitle,
+    postsValidationContent,
+    inputValidationResultMiddleware,
+    createPostsByBlogId,
+  );
