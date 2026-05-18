@@ -7,7 +7,7 @@ import { commentsService } from "../../../comment/application/comments-service";
 import { queryUsersRepositories } from "../../../users/repositories/query-user-repositories";
 import { CommentViewModel } from "../../../comment/types/CommentViewModel";
 import { queryPostsRepositories } from "../../repositories/query-posts-repositories";
-import {AuthMe} from "../../../login/type/MeViewModel";
+import { AuthMe } from "../../../login/type/MeViewModel";
 
 export async function createComments(
   req: Request<{ postId: string }, {}, CommentInputModel>,

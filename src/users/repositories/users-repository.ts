@@ -2,8 +2,8 @@ import { UserViewModel } from "../types/UserViewModel";
 import { usersCollection } from "../../db/mongo.db";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
-import {usersCollectionDB} from "../types/users-collection-DB";
-import {usersWithEmailConfirmation} from "../types/user-with-EmailConfirmation";
+import { usersCollectionDB } from "../types/users-collection-DB";
+import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 
 export const usersRepository = {
   async create(newUser: UserInputModel): Promise<WithId<UserViewModel> | null> {
@@ -17,9 +17,8 @@ export const usersRepository = {
         confirmationCode: null,
         expirationDate: null,
         isConfirmed: true,
-      }
+      },
     };
-
 
     const CreatedNewUser = await usersCollection.insertOne(newUserInputBD);
 
@@ -38,46 +37,50 @@ export const usersRepository = {
     }
     return true;
   },
-  async createUserWithConformationAreas(user:usersCollectionDB):Promise<usersWithEmailConfirmation> {
-
-    const newUser=await usersCollection.insertOne({
-      id:user.id,
-      login:user.login,
-      password:user.password,
-      email:user.email,
-      createdAt:user.createdAt,
-      emailConfirmation:user.emailConfirmation
-    })
+  async createUserWithConformationAreas(
+    user: usersCollectionDB,
+  ): Promise<usersWithEmailConfirmation> {
+    const newUser = await usersCollection.insertOne({
+      id: user.id,
+      login: user.login,
+      password: user.password,
+      email: user.email,
+      createdAt: user.createdAt,
+      emailConfirmation: user.emailConfirmation,
+    });
 
     return {
       id: user.id,
       login: user.login,
       email: user.email,
       createdAt: user.createdAt,
-      emailConfirmation:user.emailConfirmation
-    }
+      emailConfirmation: user.emailConfirmation,
+    };
   },
-  async upadeUserConfirmation(userId:string):Promise<void> {
-
-    await usersCollection.updateOne({id:userId}, {$set:{'emailConfirmation.isConfirmed':true}})
-
+  async upadeUserConfirmation(userId: string): Promise<void> {
+    await usersCollection.updateOne(
+      { id: userId },
+      { $set: { "emailConfirmation.isConfirmed": true } },
+    );
   },
-  async repeatSendingConfirmationCode(id:string,confirmationCode:string):Promise<usersWithEmailConfirmation|null>{
-
-    const updateUserCode=await usersCollection.updateOne({id:id}, {$set:{'emailConfirmation.confirmationCode':confirmationCode}})
-    const findUser=await usersCollection.findOne({id})
-    if(!findUser){
+  async repeatSendingConfirmationCode(
+    id: string,
+    confirmationCode: string,
+  ): Promise<usersWithEmailConfirmation | null> {
+    const updateUserCode = await usersCollection.updateOne(
+      { id: id },
+      { $set: { "emailConfirmation.confirmationCode": confirmationCode } },
+    );
+    const findUser = await usersCollection.findOne({ id });
+    if (!findUser) {
       return null;
     }
     return {
       id: findUser.id,
-          login: findUser.login,
-        email: findUser.email,
-        createdAt: findUser.createdAt,
-        emailConfirmation:findUser.emailConfirmation
-    }
-
-
-  }
-
+      login: findUser.login,
+      email: findUser.email,
+      createdAt: findUser.createdAt,
+      emailConfirmation: findUser.emailConfirmation,
+    };
+  },
 };

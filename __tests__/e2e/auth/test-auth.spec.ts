@@ -7,16 +7,16 @@ import { Login_Path } from "../../../src/core/paths/paths";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import { queryUsersRepositories } from "../../../src/users/repositories/query-user-repositories";
-import {usersCollectionDB} from "../../../src/users/types/users-collection-DB";
-import {nodemailerApplication} from "../../../src/login/nodemaierService/sendEmail";
-import {beforeEach} from "node:test";
+import { usersCollectionDB } from "../../../src/users/types/users-collection-DB";
+import { nodemailerApplication } from "../../../src/login/nodemaierService/sendEmail";
+import { beforeEach } from "node:test";
 
 jest.setTimeout(30000);
 
 describe("User API Tests", () => {
   const app = express();
 
-   setupApp(app);
+  setupApp(app);
 
   const correctLogin = "testUser";
   const corectEmail = "test@example.com";
@@ -32,11 +32,11 @@ describe("User API Tests", () => {
       email: corectEmail,
       password: hashedPassword,
       createdAt: new Date().toISOString(),
-      emailConfirmation:{
-        confirmationCode:"rightCode",
-        isConfirmed:false,
-        expirationDate:new Date(),
-      }
+      emailConfirmation: {
+        confirmationCode: "rightCode",
+        isConfirmed: false,
+        expirationDate: new Date(),
+      },
     };
     await usersCollection.insertOne(User_DB_First);
   });
@@ -82,11 +82,10 @@ describe("User API Tests", () => {
     expect(response.text).toContain("DB error");
   });
 
-  describe('create registration tests', () => {
-
-    const incorrectLogin: string = 'soMuchLettersInLogin';
-    const incorrectEmail: string = 'soMuchLettersInEmailActuallyMoreThanNeed';
-    const incorrectPassword: string = '123';
+  describe("create registration tests", () => {
+    const incorrectLogin: string = "soMuchLettersInLogin";
+    const incorrectEmail: string = "soMuchLettersInEmailActuallyMoreThanNeed";
+    const incorrectPassword: string = "123";
 
     const originalEmailAdapter = nodemailerApplication;
     const emailAdapterMock: jest.Mocked<nodemailerApplication> = {
@@ -105,114 +104,118 @@ describe("User API Tests", () => {
       jest.clearAllMocks();
     });
 
-
-
-    it('should not create because incorrect login', async () => {
-
-      const response = await request(app).
-      post(Login_Path.auth.registration).
-      send({
-        login: incorrectLogin,
-        password: correctPassword,
-        email: corectEmail
-      });
+    it("should not create because incorrect login", async () => {
+      const response = await request(app)
+        .post(Login_Path.auth.registration)
+        .send({
+          login: incorrectLogin,
+          password: correctPassword,
+          email: corectEmail,
+        });
 
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         errorsMessages: expect.arrayContaining([
-          expect.objectContaining({field: 'login', message: expect.any(String)})
-        ])
-      })
-    })
-
-    it('should not create because incorrect email', async () => {
-
-      const response = await request(app).
-      post(Login_Path.auth.registration).
-      send({
-        login: incorrectLogin,
-        password: correctPassword,
-        email:incorrectEmail
+          expect.objectContaining({
+            field: "login",
+            message: expect.any(String),
+          }),
+        ]),
       });
+    });
+
+    it("should not create because incorrect email", async () => {
+      const response = await request(app)
+        .post(Login_Path.auth.registration)
+        .send({
+          login: incorrectLogin,
+          password: correctPassword,
+          email: incorrectEmail,
+        });
 
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         errorsMessages: expect.arrayContaining([
-          expect.objectContaining({field: 'email', message: expect.any(String)})
-        ])
-      })
-    })
-
-    it('should not create because incorrect password', async () => {
-
-      const response = await request(app).
-      post(Login_Path.auth.registration).
-      send({
-        login: correctLogin,
-        password: incorrectPassword,
-        email:corectEmail
+          expect.objectContaining({
+            field: "email",
+            message: expect.any(String),
+          }),
+        ]),
       });
+    });
+
+    it("should not create because incorrect password", async () => {
+      const response = await request(app)
+        .post(Login_Path.auth.registration)
+        .send({
+          login: correctLogin,
+          password: incorrectPassword,
+          email: corectEmail,
+        });
 
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         errorsMessages: expect.arrayContaining([
-          expect.objectContaining({field: 'password', message: expect.any(String)})
-        ])
-      })
-    })
+          expect.objectContaining({
+            field: "password",
+            message: expect.any(String),
+          }),
+        ]),
+      });
+    });
 
-    it('should create not user login', async () => {
+    it("should create not user login", async () => {
       await usersCollection.deleteOne({ login: correctLogin });
-      emailAdapterMock.confirmEmail.mockResolvedValue(true)
-      const response=await request(app).
-      post(Login_Path.auth.registration).
-      send({
-        login: correctLogin,
-        password:correctPassword,
-        email:corectEmail
-      });
+      emailAdapterMock.confirmEmail.mockResolvedValue(true);
+      const response = await request(app)
+        .post(Login_Path.auth.registration)
+        .send({
+          login: correctLogin,
+          password: correctPassword,
+          email: corectEmail,
+        });
 
       expect(response.status).toBe(204);
-      })
-    })
-
-  it('should send error not unique login', async () => {
-
-    const response=await request(app).
-    post(Login_Path.auth.registration).
-    send({
-      login: correctLogin,
-      password:correctPassword,
-      email:'igor@igor.com'
     });
+  });
+
+  it("should send error not unique login", async () => {
+    const response = await request(app)
+      .post(Login_Path.auth.registration)
+      .send({
+        login: correctLogin,
+        password: correctPassword,
+        email: "igor@igor.com",
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       errorsMessages: expect.arrayContaining([
-        expect.objectContaining({field: 'login', message: expect.any(String)})
-      ])
-    })
-
-  })
-
-  it('should send error not unique email', async () => {
-
-    const response=await request(app).
-    post(Login_Path.auth.registration).
-    send({
-      login: 'igor',
-      password:correctPassword,
-      email:corectEmail
+        expect.objectContaining({
+          field: "login",
+          message: expect.any(String),
+        }),
+      ]),
     });
+  });
+
+  it("should send error not unique email", async () => {
+    const response = await request(app)
+      .post(Login_Path.auth.registration)
+      .send({
+        login: "igor",
+        password: correctPassword,
+        email: corectEmail,
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
       errorsMessages: expect.arrayContaining([
-        expect.objectContaining({field: 'email', message: expect.any(String)})
-      ])
-    })
-
-  })
-
-
+        expect.objectContaining({
+          field: "email",
+          message: expect.any(String),
+        }),
+      ]),
+    });
+  });
 });

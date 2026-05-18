@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { PaginatedOutput } from "../../../core/types/Paginated-output";
 import { matchedData } from "express-validator";

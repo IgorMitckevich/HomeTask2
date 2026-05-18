@@ -17,3 +17,8 @@ export const Login_Path = {
     logout: "/auth/logout",
   },
 };
+
+export const Security_Path={
+ security: "/security",
+ securityDevice: "/security/device",
+}

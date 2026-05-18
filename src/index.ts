@@ -1,7 +1,8 @@
 import express from "express";
 import { setupApp } from "./setup-app";
 import { SETTINGS } from "./core/settings/settings";
-import { runDb } from "./db/mongo.db";
+import { expiredTokensCollection, runDb } from "./db/mongo.db";
+import { setInterval } from "node:timers";
 // import dotenv from "dotenv";
 //
 // dotenv.config();
@@ -17,7 +18,9 @@ const server = async () => {
 
   const PORT = SETTINGS.PORT;
   await runDb(SETTINGS.MONGO_URL);
-
+  // setInterval(async () => {
+  //   await expiredTokensCollection.deleteMany({})
+  // },60*60*1000)
   app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
   });

@@ -40,7 +40,7 @@ postsRouter
     getCommentsByPostId,
   )
   .post(
-      "/:postId/comments",
+    "/:postId/comments",
     accessTokenGuard,
     contentValidation,
     inputValidationResultMiddleware,

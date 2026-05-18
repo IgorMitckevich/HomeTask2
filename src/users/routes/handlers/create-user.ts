@@ -15,7 +15,6 @@ export const createUser = async (
   res: Response,
 ) => {
   try {
-
     const newUser: UserInputModel = {
       login: req.body.login,
       email: req.body.email,

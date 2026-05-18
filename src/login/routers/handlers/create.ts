@@ -19,8 +19,13 @@ export async function createLoginOrEmailAndPassword(
       res.sendStatus(HttpStatus.Unauthorized);
       return;
     }
-    const accessToken = await jwtService.createUserPass(checkAuthorized);
+    const accessToken = await jwtService.createAccessToken(checkAuthorized.id);
 
+    const refreshToken = await jwtService.createRefreshToken(
+      checkAuthorized.id,
+    );
+
+    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
     res.status(HttpStatus.Ok).send({ accessToken: accessToken });
   } catch (err: unknown) {
     res.status(HttpStatus.InternalServerError).send(`errormessage:${err}`);
