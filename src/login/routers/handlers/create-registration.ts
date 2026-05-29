@@ -49,7 +49,7 @@ export const createRegistration = async (
       await usersService.createUserWithConfirmationAreas(req.body);
 
     try {
-      await nodemailerService.sendEmail(
+        nodemailerService.sendEmail(
         createRegistration.email,
         createRegistration.emailConfirmation.confirmationCode as string,
       );

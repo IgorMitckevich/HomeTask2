@@ -43,7 +43,7 @@ export const createRegistrationEmailResendingRequest = async (
       );
 
     try {
-      await nodemailerService.sendEmail(inputEmail, newCode);
+       nodemailerService.sendEmail(inputEmail, newCode);
       res.sendStatus(HttpStatus.NoContent);
     } catch (err) {
       console.log("error with sending email");

@@ -14,13 +14,13 @@ console.log(MONGO_URI);
 const server = async () => {
   const app = express();
 
-  await setupApp(app);
+  app.set('trust proxy', true);
 
+
+  await setupApp(app);
   const PORT = SETTINGS.PORT;
   await runDb(SETTINGS.MONGO_URL);
-  // setInterval(async () => {
-  //   await expiredTokensCollection.deleteMany({})
-  // },60*60*1000)
+
   app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
   });

@@ -20,5 +20,5 @@ export const Login_Path = {
 
 export const Security_Path={
  security: "/security",
- securityDevice: "/security/device",
+ securityDevice: "/devices",
 }

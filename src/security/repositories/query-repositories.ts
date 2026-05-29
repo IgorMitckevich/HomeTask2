@@ -3,8 +3,8 @@ import {DeviceViewModel} from "../types/device-view-model";
 
 
 export class queryRepositories{
-    async getDevices():Promise<DeviceViewModel[]> {
-        const allDevices= await devicesCollection.find({}).toArray();
+    async getDevices(userId:string):Promise<DeviceViewModel[]> {
+        const allDevices= await devicesCollection.find({userId}).toArray();
         return allDevices.map(value => {
             return {
                 ip: value.ip,

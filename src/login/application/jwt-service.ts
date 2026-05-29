@@ -1,18 +1,19 @@
 import jwt from "jsonwebtoken";
-import { appConfig } from "../../common/confit";
-
-import { UserViewModel } from "../../users/types/UserViewModel";
+import { appConfig } from "../../common/config";
+import {ObjectId} from "mongodb";
+import {TokenType} from "../../security/types/token-type";
 
 export const jwtService = {
-  async createAccessToken(id: string): Promise<string> {
-    const payload = { userId: id };
-    return jwt.sign(payload, appConfig.SecretKey, { expiresIn: "10s" });
+  async createAccessToken(id: string,deviceId:string): Promise<string> {
+    // const payload = { userId: id };
+    const payload = { userId: id ,deviceId:deviceId };
+    return jwt.sign(payload, appConfig.SecretKey, { expiresIn: 10 });
   },
-  async verifyToken(token: string): Promise<{ userId: string } | null> {
+  async verifyToken(token: string): Promise<TokenType | null> {
     try {
-      return jwt.verify(token, appConfig.SecretKey) as {
-        userId: string;
-      } | null;
+
+      return jwt.verify(token, appConfig.SecretKey)   as unknown as TokenType | null;
+
     } catch (err: unknown) {
       return null;
     }
@@ -37,8 +38,8 @@ export const jwtService = {
       return null;
     }
   },
-  async createRefreshToken(id: string): Promise<string> {
-    const payload = { userId: id };
-    return jwt.sign(payload, appConfig.SecretKey, { expiresIn: "20s" });
+  async createRefreshToken(id: string,deviceId:string):Promise<string> {
+    const payload = { userId: id ,deviceId:deviceId  };
+    return jwt.sign(payload, appConfig.SecretKey, { expiresIn: 20 });
   },
 };

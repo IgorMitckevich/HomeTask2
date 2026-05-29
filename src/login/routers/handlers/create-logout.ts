@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { jwtService } from "../../application/jwt-service";
-import { expiredTokensCollection } from "../../../db/mongo.db";
+import {devicesCollection, expiredTokensCollection} from "../../../db/mongo.db";
 import { refreshTokenService } from "../../application/refresh-token-service";
 
 export const createLogout = async (request: Request, response: Response) => {
@@ -11,17 +11,23 @@ export const createLogout = async (request: Request, response: Response) => {
     return response.sendStatus(HttpStatus.Unauthorized);
   }
 
-  const isTokenBlackListed =
+  const foundRefreshToken =
     await refreshTokenService.findRefreshToken(refreshToken);
-  if (isTokenBlackListed) {
+  if (!foundRefreshToken) {
     return response.sendStatus(HttpStatus.Unauthorized);
   }
   const decodedToken = await jwtService.verifyToken(refreshToken);
   if (!decodedToken) {
     return response.sendStatus(HttpStatus.Unauthorized);
   }
+  const deviceSession = await devicesCollection.findOne({ deviceId: decodedToken.deviceId });
+  if (!deviceSession) {
+    return response.sendStatus(HttpStatus.Unauthorized);
+  }
+  // await refreshTokenService.addToBlackList(refreshToken);
+  await refreshTokenService.deleteRefreshToken(refreshToken);
 
-  await refreshTokenService.addToBlackList(refreshToken);
+  await devicesCollection.deleteOne({deviceId: decodedToken.deviceId});
 
   response.clearCookie("refreshToken", { httpOnly: true, secure: true });
   response.sendStatus(HttpStatus.NoContent);

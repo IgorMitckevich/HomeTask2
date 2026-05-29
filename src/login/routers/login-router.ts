@@ -12,27 +12,39 @@ import { checkingEmail } from "../middlewares/validation/validation";
 import cookieParser from "cookie-parser";
 import { createRefreshToken } from "./handlers/create-refresh-token";
 import { createLogout } from "./handlers/create-logout";
+import {callCounting} from "../../setup-app";
 
 export const loginRouter = express.Router();
 
 loginRouter
-  .post(Login_Path.auth.login, createLoginOrEmailAndPassword)
-  .get(Login_Path.auth.me, accessTokenGuard, getMe)
+  .post(Login_Path.auth.login
+      ,callCounting
+,createLoginOrEmailAndPassword)
+  .get(Login_Path.auth.me
+      , accessTokenGuard
+      , getMe)
   .post(
-    Login_Path.auth.registrationConfirmation,
-    createRegistrationConfirmation,
+    Login_Path.auth.registrationConfirmation
+      ,callCounting
+      ,createRegistrationConfirmation,
   )
   .post(
-    Login_Path.auth.registration,
-    UsersInputValidation,
-    inputValidationResultMiddleware,
-    createRegistration,
+    Login_Path.auth.registration
+      ,callCounting
+      ,UsersInputValidation
+      ,inputValidationResultMiddleware
+      ,createRegistration,
   )
   .post(
-    Login_Path.auth.registrationEmailResending,
-    checkingEmail,
-    inputValidationResultMiddleware,
-    createRegistrationEmailResendingRequest,
+    Login_Path.auth.registrationEmailResending
+    ,callCounting
+      ,checkingEmail
+      ,inputValidationResultMiddleware
+    ,createRegistrationEmailResendingRequest,
   )
-  .post(Login_Path.auth.refreshToken, cookieParser(), createRefreshToken)
-  .post(Login_Path.auth.logout, cookieParser(), createLogout);
+  .post(Login_Path.auth.refreshToken
+      , cookieParser()
+      , createRefreshToken)
+  .post(Login_Path.auth.logout
+      , cookieParser()
+      , createLogout);
