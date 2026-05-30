@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import { createRefreshToken } from "./handlers/create-refresh-token";
 import { createLogout } from "./handlers/create-logout";
 import {callCounting} from "../../setup-app";
+import {createPasswordRecovery} from "./handlers/create-password-recovery";
 
 export const loginRouter = express.Router();
 
@@ -47,4 +48,9 @@ loginRouter
       , createRefreshToken)
   .post(Login_Path.auth.logout
       , cookieParser()
-      , createLogout);
+      , createLogout)
+    .post(Login_Path.auth.passwordRecovery
+    ,callCounting
+        ,checkingEmail
+        ,createPasswordRecovery
+    );

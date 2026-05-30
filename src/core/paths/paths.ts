@@ -11,6 +11,7 @@ export const Login_Path = {
     login: "/auth/login",
     registration: "/auth/registration",
     me: "/auth/me",
+    passwordRecovery:"/auth/password-recovery",
     registrationConfirmation: "/auth/registration-confirmation",
     registrationEmailResending: "/auth/registration-email-resending",
     refreshToken: "/auth/refresh-token",
