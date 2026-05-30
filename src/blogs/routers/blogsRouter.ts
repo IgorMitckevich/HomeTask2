@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import { findAllBlogs } from "./handlers/findAllBlogs";
 import { getBlogById } from "./handlers/findBlogsById";
 import { createBlog } from "./handlers/createBlogs";
@@ -17,32 +17,51 @@ import {
 } from "../../core/middlewares/validation/posts/posts.validation";
 import { BlogSortFields } from "../constants/blog-sort-fields";
 import { PostSortFields } from "../../posts/constants/post-sort-fields";
+import {BlogInputModel, BlogViewModel} from "../types/blogersModel";
+import {ObjectId, WithId} from "mongodb";
+import {
+  blogController,
+  blogsService,
+  postsService,
+  queryBlogsRepositories,
+  queryPostsRepositories
+} from "../../common/composition-root";
+import {blogsMap} from "./mappers/blogsMap";
+import {HttpStatus} from "../../core/https-statuses/httpStatuses";
+import {PaginatedOutput} from "../../core/types/Paginated-output";
+import {matchedData} from "express-validator";
+import {mapBlogsPaginated} from "./mappers/map-blogs-list-paginated-output";
+import {PostInputModel} from "../../posts/types/postsModel";
+import {postsMap} from "../../posts/routers/mappers/postsMap";
+import {PostsQueryInput} from "../../posts/types/posts-query-input";
+import {PostsPaginated} from "../../posts/types/postPaginated";
+import {mapPostsPaginated} from "../../posts/routers/mappers/map-posts-list-paginated-output";
 
 export const blogsRouter = express.Router();
 
+
 blogsRouter
-  .get("/", paginationAndSortingValidation(BlogSortFields), findAllBlogs)
-  .get(`/:id`, getBlogById)
+  .get("/", paginationAndSortingValidation(BlogSortFields), blogController.findAllBlogs.bind(blogController))
+  .get(`/:id`, blogController.getBlogById.bind(blogController))
   .post(
     "/",
     adminGuard,
     blogsValidation,
     inputValidationResultMiddleware,
-    createBlog,
+    blogController.createBlog.bind(blogController),
   )
   .put(
     `/:id`,
     adminGuard,
-    // mongoId,
     blogsValidation,
     inputValidationResultMiddleware,
-    updateBlogById,
+    blogController.updateBlogById.bind(blogController),
   )
-  .delete(`/:id`, adminGuard, deleteBlogsById)
+  .delete(`/:id`, adminGuard, blogController.deleteBlogsById.bind(blogController))
   .get(
     `/:blogId/posts`,
     paginationAndSortingValidation(PostSortFields),
-    getAllPostsByBlogId,
+    blogController.getAllPostsByBlogId.bind(blogController),
   )
   .post(
     `/:blogId/posts/`,

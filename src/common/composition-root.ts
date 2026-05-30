@@ -16,11 +16,13 @@ import {DeviceService} from "../security/application/session-device-service";
 import {usersApplication} from "../users/application/users-service";
 import {QueryUsersRepositories} from "../users/repositories/query-user-repositories";
 import {UsersRepository} from "../users/repositories/users-repository";
+import {BlogController} from "../blogs/routers/Blog-controller";
 
 
-export const blogsRepostirories=new BlogsRepostirories()
+export const blogsRepositories=new BlogsRepostirories()
 export const queryBlogsRepositories=new QueryBlogsRepositories();
 export const blogsService=new BlogsService();
+export const blogController=new BlogController();
 export const commentsService=new CommentsService();
 export const commentsRepositories=new CommentsRepositories();
 export const queryCommentsRepositories=new QueryCommentsRepositories();
@@ -29,7 +31,7 @@ export const jwtService=new JwtService();
 export const refreshTokenService = new refreshTokenList();
 export const nodemailerService = new nodemailerApplication();
 export const postsService=new PostsService();
-export const postsRepostirories=new PostsRepostirories();
+export const postsRepositories=new PostsRepostirories();
 export const queryPostsRepositories=new QueryPostsRepositories();
 export const queryDeviceRepositories=new queryRepositories();
 export const sessionDeviceService=new DeviceService();

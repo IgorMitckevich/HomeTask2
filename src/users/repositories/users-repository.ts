@@ -62,7 +62,7 @@ export class UsersRepository {
       { id: userId },
       { $set: { "emailConfirmation.isConfirmed": true } },
     );
-  },
+  }
   async repeatSendingConfirmationCode(
     id: string,
     confirmationCode: string,

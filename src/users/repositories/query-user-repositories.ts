@@ -2,7 +2,7 @@ import { usersCollection } from "../../db/mongo.db";
 import { WithId } from "mongodb";
 import { UserViewModel } from "../types/UserViewModel";
 import { PaginatorInput } from "../types/Paginator-input";
-import { bcryptService } from "../../login/application/bcrypt-service";
+import { bcryptService } from "../../common/composition-root";
 import { AuthMe } from "../../login/type/MeViewModel";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 

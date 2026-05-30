@@ -57,8 +57,6 @@ export async function callCounting(req:Request, res:Response, next:NextFunction)
     if (requestCount>5){
     return res.sendStatus(429);
   }
-
-
   next()
   }catch(err){
     console.log(`catch error in callCounting:${err}`);
