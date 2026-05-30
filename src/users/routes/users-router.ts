@@ -15,7 +15,7 @@ usersRouter
     "/",
     adminGuard,
     paginationAndSortingValidation(UsersSortFields),
-    getAllUsers,
+    getAllUsers
   )
   .post(
     "/",

@@ -1,11 +1,9 @@
 import { Response, Request } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-
-import { postsRepostirories } from "../../repositories/posts.repostirories";
 import { WithId } from "mongodb";
 import { PostInputModel, PostViewModel } from "../../types/postsModel";
-import { postsService } from "../../application/posts.service";
-import { queryPostsRepositories } from "../../repositories/query-posts-repositories";
+import { postsService } from "../../../common/composition-root";
+import { queryPostsRepositories } from "../../../common/composition-root";
 
 export async function updatePostsById(
   req: Request<{ id: string }, {}, PostInputModel>,

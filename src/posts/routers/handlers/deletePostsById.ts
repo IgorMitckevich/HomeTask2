@@ -1,11 +1,9 @@
 import { Response, Request } from "express";
-import { posts } from "../../../db/dbPosts";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { postsRepostirories } from "../../repositories/posts.repostirories";
 import { WithId } from "mongodb";
 import { PostViewModel } from "../../types/postsModel";
-import { postsService } from "../../application/posts.service";
-import { queryPostsRepositories } from "../../repositories/query-posts-repositories";
+import { postsService } from "../../../common/composition-root";
+import { queryPostsRepositories } from "../../../common/composition-root";
 
 export async function deletePostsById(req: Request, res: Response) {
   try {

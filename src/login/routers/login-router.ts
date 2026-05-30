@@ -26,21 +26,21 @@ loginRouter
   .post(
     Login_Path.auth.registrationConfirmation
       ,callCounting
-      ,createRegistrationConfirmation,
+      ,createRegistrationConfirmation
   )
   .post(
     Login_Path.auth.registration
       ,callCounting
       ,UsersInputValidation
       ,inputValidationResultMiddleware
-      ,createRegistration,
+      ,createRegistration
   )
   .post(
     Login_Path.auth.registrationEmailResending
     ,callCounting
       ,checkingEmail
       ,inputValidationResultMiddleware
-    ,createRegistrationEmailResendingRequest,
+    ,createRegistrationEmailResendingRequest
   )
   .post(Login_Path.auth.refreshToken
       , cookieParser()

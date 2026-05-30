@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { PaginatedOutput } from "../../../core/types/Paginated-output";
 import { matchedData } from "express-validator";
 import { mapBlogsPaginated } from "../mappers/map-blogs-list-paginated-output";
-import { queryBlogsRepositories } from "../../repositories/query-blogs-repositories";
+import { queryBlogsRepositories } from "../../../common/composition-root";
 
 export async function findAllBlogs(
   req: Request<{}, {}, {}, PaginatedOutput>,

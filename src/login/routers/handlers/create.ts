@@ -1,11 +1,11 @@
 import { Response, Request } from "express";
 import { LoginInputModel } from "../../type/login-Input-model";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { jwtService } from "../../application/jwt-service";
-import { queryUsersRepositories } from "../../../users/repositories/query-user-repositories";
+import { jwtService } from "../../../common/composition-root";
+import { queryUsersRepositories } from "../../../common/composition-root";
 import {devicesCollection} from "../../../db/mongo.db";
 import {ObjectId} from "mongodb";
-import {refreshTokenService} from "../../application/refresh-token-service";
+import {refreshTokenService} from "../../../common/composition-root";
 
 export async function createLoginOrEmailAndPassword(
   req: Request<{}, {}, LoginInputModel>,

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { queryCommentsRepositories } from "../../repositories/query-comment-repostitories";
-import { commentsService } from "../../application/comments-service";
+import { queryCommentsRepositories } from "../../../common/composition-root";
+import { commentsService } from "../../../common/composition-root";
 
 export async function deleteCommentById(
   req: Request<{ commentId: string }>,

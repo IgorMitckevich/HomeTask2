@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { mapPaginatorUserViewModel } from "../mappers/map-paginated-users";
 import { matchedData } from "express-validator";
 import { PaginatorInput } from "../../types/Paginator-input";
-import { queryUsersRepositories } from "../../repositories/query-user-repositories";
+import { queryUsersRepositories } from "../../../common/composition-root";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {

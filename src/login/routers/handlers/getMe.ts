@@ -1,7 +1,7 @@
 import { AuthMe } from "../../type/MeViewModel";
 import { Response, Request } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { queryUsersRepositories } from "../../../users/repositories/query-user-repositories";
+import { queryUsersRepositories } from "../../../common/composition-root";
 
 export async function getMe(req: Request, res: Response): Promise<any> {
   try {

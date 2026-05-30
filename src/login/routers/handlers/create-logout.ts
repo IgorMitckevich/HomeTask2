@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { jwtService } from "../../application/jwt-service";
-import {devicesCollection, expiredTokensCollection} from "../../../db/mongo.db";
-import { refreshTokenService } from "../../application/refresh-token-service";
+import { jwtService } from "../../../common/composition-root";
+import {devicesCollection} from "../../../db/mongo.db";
+import { refreshTokenService } from "../../../common/composition-root";
 
 export const createLogout = async (request: Request, response: Response) => {
   const refreshToken = request.cookies.refreshToken;

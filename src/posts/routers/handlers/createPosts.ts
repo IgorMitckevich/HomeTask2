@@ -3,9 +3,8 @@ import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { PostInputModel, PostViewModel } from "../../types/postsModel";
 import { postsMap } from "../mappers/postsMap";
 import { ObjectId } from "mongodb";
-import { postsService } from "../../application/posts.service";
-import { blogsService } from "../../../blogs/application/blogsService";
-import { queryBlogsRepositories } from "../../../blogs/repositories/query-blogs-repositories";
+import { postsService } from "../../../common/composition-root";
+import { queryBlogsRepositories } from "../../../common/composition-root";
 
 export async function createPosts(
   req: Request<{}, {}, PostInputModel>,

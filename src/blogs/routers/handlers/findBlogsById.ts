@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { BlogViewModel } from "../../types/blogersModel";
-import { blogsRepostirories } from "../../repositories/blogs.repostirories";
 import { WithId } from "mongodb";
-import { blogsService } from "../../application/blogsService";
-import { queryBlogsRepositories } from "../../repositories/query-blogs-repositories";
+import { queryBlogsRepositories } from "../../../common/composition-root";
 
 export async function getBlogById(
   req: Request,

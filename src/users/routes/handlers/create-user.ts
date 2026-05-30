@@ -1,14 +1,8 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { UserInputModel } from "../../types/UserInputModel";
-import { UserViewModel } from "../../types/UserViewModel";
-import { ObjectId } from "mongodb";
-import { usersService } from "../../application/users-service";
+import { usersService } from "../../../common/composition-root";
 import { mapForCreatedUsers } from "../mappers/map-for-newUser";
-import {
-  formatErrors,
-  inputValidationResultMiddleware,
-} from "../../../core/middlewares/validation/inputValidationBlogs";
 
 export const createUser = async (
   req: Request<{}, {}, UserInputModel>,

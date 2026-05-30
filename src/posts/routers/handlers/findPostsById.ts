@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { postsRepostirories } from "../../repositories/posts.repostirories";
 import { PostViewModel } from "../../types/postsModel";
 import { WithId } from "mongodb";
-import { postsService } from "../../application/posts.service";
-import { queryPostsRepositories } from "../../repositories/query-posts-repositories";
+import { queryPostsRepositories } from "../../../common/composition-root";
 
 export async function findPostsById(req: Request, res: Response) {
   const id = req.params.id as string;

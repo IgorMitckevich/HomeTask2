@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { queryCommentsRepositories } from "../../repositories/query-comment-repostitories";
+import { queryCommentsRepositories } from "../../../common/composition-root";
 
 export async function getCommentsById(
   req: Request<{ id: string }>,

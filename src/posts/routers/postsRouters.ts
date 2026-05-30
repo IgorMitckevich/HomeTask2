@@ -24,7 +24,7 @@ postsRouter
     adminGuard,
     postValidation,
     inputValidationResultMiddleware,
-    createPosts,
+    createPosts
   )
   .put(
     `/:id`,
@@ -37,12 +37,12 @@ postsRouter
   .get(
     "/:postId/comments",
     paginationAndSortingValidation(PostSortFields),
-    getCommentsByPostId,
+    getCommentsByPostId
   )
   .post(
     "/:postId/comments",
     accessTokenGuard,
     contentValidation,
     inputValidationResultMiddleware,
-    createComments,
+    createComments
   );

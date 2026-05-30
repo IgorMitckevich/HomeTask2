@@ -1,11 +1,9 @@
 import { Response, Request } from "express";
-import { blogs } from "../../../db/dbBlogs";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { blogsRepostirories } from "../../repositories/blogs.repostirories";
 import { BlogViewModel } from "../../types/blogersModel";
 import { WithId } from "mongodb";
-import { blogsService } from "../../application/blogsService";
-import { queryBlogsRepositories } from "../../repositories/query-blogs-repositories";
+import { blogsService } from "../../../common/composition-root";
+import { queryBlogsRepositories } from "../../../common/composition-root";
 
 export async function deleteBlogsById(
   req: Request,

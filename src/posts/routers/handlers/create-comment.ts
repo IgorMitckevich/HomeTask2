@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import { CommentInputModel } from "../../../comment/types/CommentInputModel";
-import { postsService } from "../../application/posts.service";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { matchedData } from "express-validator";
-import { commentsService } from "../../../comment/application/comments-service";
-import { queryUsersRepositories } from "../../../users/repositories/query-user-repositories";
+import { commentsService } from "../../../common/composition-root";
+import { queryUsersRepositories } from "../../../common/composition-root";
 import { CommentViewModel } from "../../../comment/types/CommentViewModel";
-import { queryPostsRepositories } from "../../repositories/query-posts-repositories";
-import { AuthMe } from "../../../login/type/MeViewModel";
+import { queryPostsRepositories } from "../../../common/composition-root";
+
 
 export async function createComments(
   req: Request<{ postId: string }, {}, CommentInputModel>,

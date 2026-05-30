@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { refreshTokenService } from "../../application/refresh-token-service";
-import { jwtService } from "../../application/jwt-service";
-import {ObjectId} from "mongodb";
+import { refreshTokenService } from "../../../common/composition-root";
+import { jwtService } from "../../../common/composition-root";
 import {devicesCollection} from "../../../db/mongo.db";
 
 export const createRefreshToken = async (
@@ -28,7 +27,6 @@ export const createRefreshToken = async (
     if (!deviceSession) {
       return response.sendStatus(HttpStatus.Unauthorized);
     }
-    // await refreshTokenService.addToBlackList(oldRefreshToken);
     await refreshTokenService.deleteRefreshToken(oldRefreshToken);
     const deviceId:string=payload.deviceId;
     const newAccessToken = await jwtService.createAccessToken(payload.userId,deviceId);

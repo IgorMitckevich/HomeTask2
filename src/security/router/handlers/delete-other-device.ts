@@ -1,8 +1,7 @@
 import{Request,Response} from 'express'
 import {HttpStatus} from "../../../core/https-statuses/httpStatuses";
-import {jwtService} from "../../../login/application/jwt-service";
-import {sessionDeviceService} from "../../application/session-device-service";
-import {expiredTokensCollection} from "../../../db/mongo.db";
+import {jwtService} from "../../../common/composition-root";
+import {sessionDeviceService} from "../../../common/composition-root";
 
 
 export const deleteOtherDevice=async (request:Request,response:Response)=>{
