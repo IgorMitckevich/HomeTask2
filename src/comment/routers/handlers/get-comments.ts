@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { QueryCommentsRepositories } from "../../repositories/query-comment-repostitories";
+import { queryCommentsRepositories } from "../../repositories/query-comment-repostitories";
 
 export async function getCommentsById(
   req: Request<{ id: string }>,
@@ -8,7 +8,7 @@ export async function getCommentsById(
 ) {
   try {
     const id = req.params.id;
-    const comments = await QueryCommentsRepositories.getCommentById(id);
+    const comments = await queryCommentsRepositories.getCommentById(id);
     if (!comments) {
       res.sendStatus(HttpStatus.NotFound);
       return;

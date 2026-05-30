@@ -1,14 +1,12 @@
 import jwt from "jsonwebtoken";
 import { appConfig } from "../../common/config";
-import {ObjectId} from "mongodb";
 import {TokenType} from "../../security/types/token-type";
 
-export const jwtService = {
+export class JwtService {
   async createAccessToken(id: string,deviceId:string): Promise<string> {
-    // const payload = { userId: id };
     const payload = { userId: id ,deviceId:deviceId };
     return jwt.sign(payload, appConfig.SecretKey, { expiresIn: 10 });
-  },
+  }
   async verifyToken(token: string): Promise<TokenType | null> {
     try {
 
@@ -17,7 +15,7 @@ export const jwtService = {
     } catch (err: unknown) {
       return null;
     }
-  },
+  }
   async isTokenExpired(token: string): Promise<boolean> {
     try {
       const decoded = jwt.verify(token, appConfig.SecretKey);
@@ -28,7 +26,7 @@ export const jwtService = {
       }
       return true;
     }
-  },
+  }
   async decodeToken(token: string): Promise<{ userId: string } | null> {
     try {
       const decoded = jwt.decode(token) as { userId: string };
@@ -37,9 +35,9 @@ export const jwtService = {
     } catch (err) {
       return null;
     }
-  },
+  }
   async createRefreshToken(id: string,deviceId:string):Promise<string> {
     const payload = { userId: id ,deviceId:deviceId  };
     return jwt.sign(payload, appConfig.SecretKey, { expiresIn: 20 });
-  },
-};
+  }
+}

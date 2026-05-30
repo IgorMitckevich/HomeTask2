@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { queryUsersRepositories } from "../../users/repositories/query-user-repositories";
-import { usersService } from "../../users/application/users-service";
+import { queryUsersRepositories } from "../../common/composition-root";
+import { usersService } from "../../common/composition-root";
 import { SETTINGS } from "../../core/settings/settings";
 
 export class nodemailerApplication {
@@ -44,4 +44,3 @@ export class nodemailerApplication {
   }
 }
 
-export const nodemailerService = new nodemailerApplication();

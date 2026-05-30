@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { postsService } from "../../application/posts.service";
-import { QueryCommentsRepositories } from "../../../comment/repositories/query-comment-repostitories";
+import { queryCommentsRepositories } from "../../../comment/repositories/query-comment-repostitories";
 import { matchedData } from "express-validator";
 import { PaginatedOutput } from "../../../core/types/Paginated-output";
 import { mapCommentsPagination } from "../mappers/map-comments";
@@ -30,7 +30,7 @@ export const getCommentsByPostId = async (
       sortDirection: sanitizedQuery.sortDirection,
     };
 
-    const getComments = await QueryCommentsRepositories.get(queryInput, postId);
+    const getComments = await queryCommentsRepositories.get(queryInput, postId);
     const pagginationComments = mapCommentsPagination(
       getComments,
       queryInput.pageNumber,

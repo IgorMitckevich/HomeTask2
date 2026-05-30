@@ -29,5 +29,4 @@ export class DeviceService{
     }
 }
 
-export const sessionDeviceService=new DeviceService();
 

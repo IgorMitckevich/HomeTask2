@@ -3,7 +3,7 @@ import { WithId } from "mongodb";
 import { PostViewModel } from "../types/postsModel";
 import { postsCollection } from "../../db/mongo.db";
 
-export const queryPostsRepositories = {
+export class QueryPostsRepositories {
   async getAllPosts(
     queryDto: PaginatedOutput,
   ): Promise<{ items: WithId<PostViewModel>[]; totalCount: number }> {
@@ -25,10 +25,10 @@ export const queryPostsRepositories = {
     ]);
 
     return { items, totalCount };
-  },
+  }
   async getPostById(id: string): Promise<WithId<PostViewModel> | null> {
     return postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
-  },
+  }
   async getPostsByBlogId(
     queryDto: PaginatedOutput,
     blogId: string,
@@ -47,5 +47,5 @@ export const queryPostsRepositories = {
       postsCollection.countDocuments(filter),
     ]);
     return { items, totalCount };
-  },
-};
+  }
+}

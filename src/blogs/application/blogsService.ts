@@ -1,10 +1,8 @@
 import { BlogInputModel, BlogViewModel } from "../types/blogersModel";
-import { blogsCollection } from "../../db/mongo.db";
-import { ObjectId, WithId } from "mongodb";
-import { PaginatedOutput } from "../../core/types/Paginated-output";
-import { blogsRepostirories } from "../repositories/blogs.repostirories";
+import { WithId } from "mongodb";
+import { blogsRepostirories } from "../../common/composition-root";
 
-export const blogsService = {
+export class BlogsService {
   async create(newBlog: BlogViewModel): Promise<WithId<BlogViewModel>> {
     const BlogToInsert = {
       id: newBlog.id,
@@ -15,15 +13,15 @@ export const blogsService = {
       isMembership: newBlog.isMembership,
     };
     return blogsRepostirories.create(BlogToInsert);
-  },
+  }
   async update(id: string, blogsInputBody: BlogInputModel): Promise<void> {
     await blogsRepostirories.update(id, blogsInputBody);
 
     return;
-  },
+  }
   async delete(id: string): Promise<void> {
     await blogsRepostirories.delete(id);
 
     return;
-  },
-};
+  }
+}

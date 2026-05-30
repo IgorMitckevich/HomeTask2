@@ -16,7 +16,6 @@ export class queryRepositories{
     }
 }
 
-export const queryDeviceRepositories=new queryRepositories();
 
 
 

@@ -3,7 +3,7 @@ import { WithId } from "mongodb";
 import { BlogViewModel } from "../types/blogersModel";
 import { blogsCollection } from "../../db/mongo.db";
 
-export const queryBlogsRepositories = {
+export class QueryBlogsRepositories {
   async getAllBlogs(
     queryDto: PaginatedOutput,
   ): Promise<{ items: WithId<BlogViewModel>[]; totalCount: number }> {
@@ -24,8 +24,8 @@ export const queryBlogsRepositories = {
       blogsCollection.countDocuments(filter),
     ]);
     return { items, totalCount };
-  },
+  }
   async getBlogById(id: string): Promise<WithId<BlogViewModel> | null> {
     return blogsCollection.findOne({ id: id }, { projection: { _id: 0 } });
-  },
-};
+  }
+}

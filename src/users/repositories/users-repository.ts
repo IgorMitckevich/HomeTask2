@@ -5,7 +5,7 @@ import { UserInputModel } from "../types/UserInputModel";
 import { usersCollectionDB } from "../types/users-collection-DB";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 
-export const usersRepository = {
+export class UsersRepository {
   async create(newUser: UserInputModel): Promise<WithId<UserViewModel> | null> {
     const newUserInputBD = {
       id: new ObjectId().toString(),
@@ -29,14 +29,14 @@ export const usersRepository = {
       email: newUserInputBD.email,
       createdAt: newUserInputBD.createdAt,
     };
-  },
+  }
   async deleteUser(userId: string): Promise<boolean> {
     const deleteUserById = await usersCollection.deleteOne({ id: userId });
     if (deleteUserById.deletedCount < 1) {
       return false;
     }
     return true;
-  },
+  }
   async createUserWithConformationAreas(
     user: usersCollectionDB,
   ): Promise<usersWithEmailConfirmation> {
@@ -56,7 +56,7 @@ export const usersRepository = {
       createdAt: user.createdAt,
       emailConfirmation: user.emailConfirmation,
     };
-  },
+  }
   async upadeUserConfirmation(userId: string): Promise<void> {
     await usersCollection.updateOne(
       { id: userId },
@@ -82,5 +82,5 @@ export const usersRepository = {
       createdAt: findUser.createdAt,
       emailConfirmation: findUser.emailConfirmation,
     };
-  },
-};
+  }
+}

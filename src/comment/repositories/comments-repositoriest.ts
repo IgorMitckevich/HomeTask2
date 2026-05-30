@@ -1,12 +1,10 @@
 import { commentsCollection } from "../../db/mongo.db";
-import { QueryCommentsRepositories } from "./query-comment-repostitories";
 import { CommentViewModel } from "../types/CommentViewModel";
 import { ObjectId, WithId } from "mongodb";
 import { CommentInputModel } from "../types/CommentInputModel";
 import { AuthMe } from "../../login/type/MeViewModel";
-import { CommentsDB } from "../types/typeCommentsDB";
 
-export const CommentsRepositories = {
+export class CommentsRepositories {
   async create(
     bodyDto: CommentInputModel,
     userData: AuthMe,
@@ -30,7 +28,7 @@ export const CommentsRepositories = {
     );
 
     return comment;
-  },
+  }
   async delete(commentId: string): Promise<boolean> {
     const deletedComment = await commentsCollection.deleteOne({
       id: commentId,
@@ -39,7 +37,7 @@ export const CommentsRepositories = {
       return false;
     }
     return true;
-  },
+  }
   async update(
     bodyDto: CommentInputModel,
     commentId: string,
@@ -54,5 +52,5 @@ export const CommentsRepositories = {
     }
 
     return true;
-  },
-};
+  }
+}

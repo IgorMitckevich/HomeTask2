@@ -1,10 +1,8 @@
 import { commentsCollection } from "../../db/mongo.db";
 import { CommentViewModel } from "../types/CommentViewModel";
 import { WithId } from "mongodb";
-import { PaginatedOutput } from "../../core/types/Paginated-output";
-import { CommentsDB } from "../types/typeCommentsDB";
 
-export const QueryCommentsRepositories = {
+export class QueryCommentsRepositories {
   async get(
     queryDto: any,
     postId: string,
@@ -23,7 +21,7 @@ export const QueryCommentsRepositories = {
     ]);
 
     return { items, totalCount };
-  },
+  }
   async getCommentById(id: string): Promise<WithId<CommentViewModel> | null> {
     const comments = await commentsCollection.findOne(
       { id: id },
@@ -33,5 +31,5 @@ export const QueryCommentsRepositories = {
       return null;
     }
     return comments;
-  },
-};
+  }
+}

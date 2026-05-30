@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { QueryCommentsRepositories } from "../../repositories/query-comment-repostitories";
+import { queryCommentsRepositories } from "../../repositories/query-comment-repostitories";
 import { commentsService } from "../../application/comments-service";
 
 export async function deleteCommentById(
@@ -11,7 +11,7 @@ export async function deleteCommentById(
     const commentId = req.params.commentId;
     const userId = req.user!.id;
     const findComment =
-      await QueryCommentsRepositories.getCommentById(commentId);
+      await queryCommentsRepositories.getCommentById(commentId);
     if (!findComment) {
       res.sendStatus(HttpStatus.NotFound);
       return;

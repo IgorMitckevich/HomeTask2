@@ -6,7 +6,7 @@ import { bcryptService } from "../../login/application/bcrypt-service";
 import { AuthMe } from "../../login/type/MeViewModel";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 
-export const queryUsersRepositories = {
+export class QueryUsersRepositories {
   async getUsers(
     queryDto: PaginatorInput,
   ): Promise<{ items: WithId<UserViewModel>[]; totalCount: number }> {
@@ -42,14 +42,14 @@ export const queryUsersRepositories = {
     ]);
 
     return { items, totalCount };
-  },
+  }
   async getUserByEmail(email: string): Promise<boolean> {
     const UserEmail = await usersCollection.findOne({ email: email });
     if (UserEmail) {
       return true;
     }
     return false;
-  },
+  }
   async getUserByID(id: string): Promise<AuthMe | null> {
     const user = await usersCollection.findOne(
       { id: id },
@@ -64,7 +64,7 @@ export const queryUsersRepositories = {
       login: user.login,
       userId: user.id,
     };
-  },
+  }
   async getUserByLoginOrEmail(
     loginOrEmail: string,
     password: string,
@@ -90,14 +90,14 @@ export const queryUsersRepositories = {
       email: user.email,
       createdAt: user.createdAt,
     };
-  },
+  }
   async findUserByCode(code: any) {
     const user = await usersCollection.findOne({
       "emailConfirmation.confirmationCode": code,
     });
 
     return user;
-  },
+  }
   async findByEmail(email: string): Promise<usersWithEmailConfirmation | null> {
     const findUser = await usersCollection.findOne({ email: email });
     if (!findUser) {
@@ -110,5 +110,5 @@ export const queryUsersRepositories = {
       createdAt: findUser.createdAt,
       emailConfirmation: findUser.emailConfirmation,
     };
-  },
-};
+  }
+}

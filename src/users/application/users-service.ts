@@ -1,9 +1,9 @@
 import { UserViewModel } from "../types/UserViewModel";
-import { usersRepository } from "../repositories/users-repository";
+import { usersRepository } from "../../common/composition-root";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
-import { bcryptService } from "../../login/application/bcrypt-service";
-import { queryUsersRepositories } from "../repositories/query-user-repositories";
+import { bcryptService } from "../../common/composition-root";
+import { queryUsersRepositories } from "../../common/composition-root";
 import { usersCollectionDB } from "../types/users-collection-DB";
 import { randomUUID } from "node:crypto";
 import { add } from "date-fns";
@@ -60,4 +60,4 @@ export class usersApplication {
   }
 }
 
-export const usersService = new usersApplication();
+
