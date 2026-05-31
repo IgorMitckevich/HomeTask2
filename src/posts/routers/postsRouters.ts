@@ -1,48 +1,44 @@
 import express from "express";
 import { adminGuard } from "../../core/middlewares/Guards/admin.guard";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationBlogs";
-import { findAllPosts } from "./handlers/findAllPosts";
-import { findPostsById } from "./handlers/findPostsById";
-import { updatePostsById } from "./handlers/updatePosts";
-import { createPosts } from "./handlers/createPosts";
-import { deletePostsById } from "./handlers/deletePostsById";
 import { postValidation } from "../../core/middlewares/validation/posts/posts.validation";
 import { paginationAndSortingValidation } from "../../core/middlewares/validation/query-pagination-sorting.vallidation-middleware";
 import { PostSortFields } from "../constants/post-sort-fields";
-import { createComments } from "./handlers/create-comment";
-import { accessTokenGuard } from "../../login/middlewares/authorization";
-import { getCommentsByPostId } from "./handlers/get-comments";
 import { contentValidation } from "../middlewares/contetn-validator";
+import {PostsController} from "./posts-controller";
+import {container} from "../../composition-root";
+import {authentication} from "../../login/routers/login-router";
 
 export const postsRouter = express.Router();
 
+const postsController=container.get(PostsController);
 postsRouter
-  .get("/", paginationAndSortingValidation(PostSortFields), findAllPosts)
-  .get(`/:id`, findPostsById)
+  .get("/", paginationAndSortingValidation(PostSortFields),postsController.findAllPosts.bind(postsController))
+  .get(`/:id`, postsController.findPostsById.bind(postsController))
   .post(
     "/",
     adminGuard,
     postValidation,
     inputValidationResultMiddleware,
-    createPosts
+      postsController.createPosts.bind(postsController)
   )
   .put(
     `/:id`,
     adminGuard,
     postValidation,
     inputValidationResultMiddleware,
-    updatePostsById,
+      postsController.updatePostsById.bind(postsController),
   )
-  .delete(`/:id`, adminGuard, deletePostsById)
+  .delete(`/:id`, adminGuard, postsController.deletePostsById.bind(postsController))
   .get(
     "/:postId/comments",
     paginationAndSortingValidation(PostSortFields),
-    getCommentsByPostId
+      postsController.getCommentsByPostId.bind(postsController)
   )
   .post(
     "/:postId/comments",
-    accessTokenGuard,
+      authentication.accessTokenGuard.bind(authentication),
     contentValidation,
     inputValidationResultMiddleware,
-    createComments
+      postsController.createComments.bind(postsController)
   );

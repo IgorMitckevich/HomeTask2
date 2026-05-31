@@ -2,11 +2,15 @@ import { usersCollection } from "../../db/mongo.db";
 import { WithId } from "mongodb";
 import { UserViewModel } from "../types/UserViewModel";
 import { PaginatorInput } from "../types/Paginator-input";
-import { bcryptService } from "../../composition-root";
 import { AuthMe } from "../../login/type/MeViewModel";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
+import {inject, injectable} from "inversify";
+import {BcryptService} from "../../login/application/bcrypt-service";
 
+@injectable()
 export class QueryUsersRepositories {
+  constructor(@inject(BcryptService) protected bcryptService: BcryptService) {}
+
   async getUsers(
     queryDto: PaginatorInput,
   ): Promise<{ items: WithId<UserViewModel>[]; totalCount: number }> {
@@ -76,7 +80,7 @@ export class QueryUsersRepositories {
       return null;
     }
 
-    const checkPassword = await bcryptService.checkPassword(
+    const checkPassword = await this.bcryptService.checkPassword(
       password,
       user.password,
     );

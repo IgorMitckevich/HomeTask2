@@ -1,56 +1,52 @@
 import express from "express";
-import { createLoginOrEmailAndPassword } from "./handlers/create";
-import { getMe } from "./handlers/getMe";
-import { accessTokenGuard } from "../middlewares/authorization";
 import { Login_Path } from "../../core/paths/paths";
-import { createRegistrationConfirmation } from "./handlers/create-registration-confirmation";
 import { UsersInputValidation } from "../../users/middlewares/validation/validation-users";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationBlogs";
-import { createRegistration } from "./handlers/create-registration";
-import { createRegistrationEmailResendingRequest } from "./handlers/create-Resitration-email-resending";
 import { checkingEmail } from "../middlewares/validation/validation";
 import cookieParser from "cookie-parser";
-import { createRefreshToken } from "./handlers/create-refresh-token";
-import { createLogout } from "./handlers/create-logout";
 import {callCounting} from "../../setup-app";
-import {createPasswordRecovery} from "./handlers/create-password-recovery";
+import {Authentication} from "./authentication";
+import {container} from "../../composition-root";
+
 
 export const loginRouter = express.Router();
+
+export const authentication = container.get(Authentication);
 
 loginRouter
   .post(Login_Path.auth.login
       ,callCounting
-,createLoginOrEmailAndPassword)
+,authentication.createLoginOrEmailAndPassword.bind(authentication))
   .get(Login_Path.auth.me
-      , accessTokenGuard
-      , getMe)
+      , authentication.accessTokenGuard.bind(authentication)
+      , authentication.getMe.bind(authentication))
   .post(
     Login_Path.auth.registrationConfirmation
       ,callCounting
-      ,createRegistrationConfirmation
+      ,authentication.createRegistrationConfirmation.bind(authentication)
   )
   .post(
     Login_Path.auth.registration
       ,callCounting
       ,UsersInputValidation
       ,inputValidationResultMiddleware
-      ,createRegistration
+      ,authentication.createRegistration.bind(authentication)
   )
   .post(
     Login_Path.auth.registrationEmailResending
     ,callCounting
       ,checkingEmail
       ,inputValidationResultMiddleware
-    ,createRegistrationEmailResendingRequest
+    ,authentication.createRegistrationEmailResendingRequest.bind(authentication)
   )
   .post(Login_Path.auth.refreshToken
       , cookieParser()
-      , createRefreshToken)
+      , authentication.createRefreshToken.bind(authentication))
   .post(Login_Path.auth.logout
       , cookieParser()
-      , createLogout)
+      , authentication.createLogout.bind(authentication))
     .post(Login_Path.auth.passwordRecovery
     ,callCounting
         ,checkingEmail
-        ,createPasswordRecovery
+        ,authentication.createPasswordRecovery.bind(authentication)
     );

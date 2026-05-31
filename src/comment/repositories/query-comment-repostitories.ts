@@ -1,7 +1,9 @@
 import { commentsCollection } from "../../db/mongo.db";
 import { CommentViewModel } from "../types/CommentViewModel";
 import { WithId } from "mongodb";
+import {injectable} from "inversify";
 
+@injectable()
 export class QueryCommentsRepositories {
   async get(
     queryDto: any,

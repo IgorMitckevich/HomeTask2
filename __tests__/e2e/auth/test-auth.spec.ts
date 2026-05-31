@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import { queryUsersRepositories } from "../../../src/users/repositories/query-user-repositories";
 import { usersCollectionDB } from "../../../src/users/types/users-collection-DB";
-import { nodemailerApplication } from "../../../src/login/nodemaierService/sendEmail";
+import { NodemailerService } from "../../../src/login/nodemaierService/sendEmail";
 import { beforeEach } from "node:test";
 
 jest.setTimeout(30000);
@@ -87,20 +87,20 @@ describe("User API Tests", () => {
     const incorrectEmail: string = "soMuchLettersInEmailActuallyMoreThanNeed";
     const incorrectPassword: string = "123";
 
-    const originalEmailAdapter = nodemailerApplication;
-    const emailAdapterMock: jest.Mocked<nodemailerApplication> = {
+    const originalEmailAdapter = NodemailerService;
+    const emailAdapterMock: jest.Mocked<NodemailerService> = {
       sendEmail: jest.fn(),
       confirmEmail: jest.fn(),
     };
 
     beforeEach(() => {
       // Подменяем
-      Object.assign(nodemailerApplication, emailAdapterMock);
+      Object.assign(NodemailerService, emailAdapterMock);
     });
 
     afterEach(() => {
       // Возвращаем обратно
-      Object.assign(nodemailerApplication, originalEmailAdapter);
+      Object.assign(NodemailerService, originalEmailAdapter);
       jest.clearAllMocks();
     });
 

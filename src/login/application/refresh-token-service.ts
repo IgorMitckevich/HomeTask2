@@ -1,8 +1,9 @@
 import { expiredTokensCollection } from "../../db/mongo.db";
 import {ObjectId} from "mongodb";
+import {injectable} from "inversify";
 
-
-export class refreshTokenList {
+@injectable()
+export class RefreshTokenService {
   async deleteRefreshToken(refreshToken: string) {
     await expiredTokensCollection.deleteOne({ refreshToken });
   }

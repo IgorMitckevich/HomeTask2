@@ -4,7 +4,9 @@ import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
 import { usersCollectionDB } from "../types/users-collection-DB";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepository {
   async create(newUser: UserInputModel): Promise<WithId<UserViewModel> | null> {
     const newUserInputBD = {

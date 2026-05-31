@@ -1,21 +1,21 @@
 import express from "express";
-import { getCommentsById } from "./handlers/get-comments";
-import { accessTokenGuard } from "../../login/middlewares/authorization";
-import { updateCommentById } from "./handlers/update-comments-byId";
+
 import { contentValidation } from "../../posts/middlewares/contetn-validator";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationBlogs";
-import { deleteCommentById } from "./handlers/delete-comment-byId";
+import {CommentsController} from "./comments-controller";
+import {container} from "../../composition-root";
+import {authentication} from "../../login/routers/login-router";
 
 export const comments_router = express.Router();
 
+const commentsController:CommentsController=container.get(CommentsController);
 comments_router
-  .get("/:id", getCommentsById)
+  .get("/:id", commentsController.getCommentsById.bind(commentsController))
   .put(
     "/:commentId",
-    accessTokenGuard,
+      authentication.accessTokenGuard.bind(authentication),
     contentValidation,
     inputValidationResultMiddleware,
-    updateCommentById,
+    commentsController.updateCommentById.bind(commentsController),
   )
-
-  .delete("/:commentId", accessTokenGuard, deleteCommentById);
+  .delete("/:commentId", authentication.accessTokenGuard.bind(authentication), commentsController.deleteCommentById.bind(commentsController));

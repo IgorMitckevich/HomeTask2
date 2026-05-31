@@ -1,15 +1,8 @@
-import express, {Request, Response} from "express";
-import { findAllBlogs } from "./handlers/findAllBlogs";
-import { getBlogById } from "./handlers/findBlogsById";
-import { createBlog } from "./handlers/createBlogs";
+import express from "express";
 import { adminGuard } from "../../core/middlewares/Guards/admin.guard";
 import { blogsValidation } from "../../core/middlewares/validation/blogs/blogs.validation";
-import { deleteBlogsById } from "./handlers/deleteBlogsById";
-import { updateBlogById } from "./handlers/updateBlogs";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationBlogs";
 import { paginationAndSortingValidation } from "../../core/middlewares/validation/query-pagination-sorting.vallidation-middleware";
-import { getAllPostsByBlogId } from "./handlers/getsAllPostByBlogId";
-import { createPostsByBlogId } from "./handlers/createPostByBlogId";
 import {
   postsValidationContent,
   postsValidationShortDescription,
@@ -17,28 +10,14 @@ import {
 } from "../../core/middlewares/validation/posts/posts.validation";
 import { BlogSortFields } from "../constants/blog-sort-fields";
 import { PostSortFields } from "../../posts/constants/post-sort-fields";
-import {BlogInputModel, BlogViewModel} from "../types/blogersModel";
-import {ObjectId, WithId} from "mongodb";
-import {
-  blogController,
-  blogsService,
-  postsService,
-  queryBlogsRepositories,
-  queryPostsRepositories
-} from "../../composition-root";
-import {blogsMap} from "./mappers/blogsMap";
-import {HttpStatus} from "../../core/https-statuses/httpStatuses";
-import {PaginatedOutput} from "../../core/types/Paginated-output";
-import {matchedData} from "express-validator";
-import {mapBlogsPaginated} from "./mappers/map-blogs-list-paginated-output";
-import {PostInputModel} from "../../posts/types/postsModel";
-import {postsMap} from "../../posts/routers/mappers/postsMap";
-import {PostsQueryInput} from "../../posts/types/posts-query-input";
-import {PostsPaginated} from "../../posts/types/postPaginated";
-import {mapPostsPaginated} from "../../posts/routers/mappers/map-posts-list-paginated-output";
+
+import { container} from "../../composition-root";
+import {BlogController} from "./Blog-controller";
+
 
 export const blogsRouter = express.Router();
 
+const blogController:BlogController=container.get(BlogController)
 
 blogsRouter
   .get("/", paginationAndSortingValidation(BlogSortFields), blogController.findAllBlogs.bind(blogController))
@@ -70,5 +49,5 @@ blogsRouter
     postsValidationTitle,
     postsValidationContent,
     inputValidationResultMiddleware,
-    createPostsByBlogId,
+    blogController.createPostsByBlogId.bind(blogController),
   );

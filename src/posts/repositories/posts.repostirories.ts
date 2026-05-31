@@ -1,7 +1,9 @@
 import { PostInputModel, PostViewModel } from "../types/postsModel";
 import { postsCollection } from "../../db/mongo.db";
 import { WithId } from "mongodb";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostsRepostirories {
   async create(newPosts: PostViewModel): Promise<WithId<PostViewModel>> {
     const createPost = await postsCollection.insertOne(newPosts);

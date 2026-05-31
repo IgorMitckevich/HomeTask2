@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import { appConfig } from "../../common/config";
 import {TokenType} from "../../security/types/token-type";
-
+import {injectable} from "inversify";
+@injectable()
 export class JwtService {
   async createAccessToken(id: string,deviceId:string): Promise<string> {
     const payload = { userId: id ,deviceId:deviceId };

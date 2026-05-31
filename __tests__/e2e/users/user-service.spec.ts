@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 import { usersService } from "../../../src/users/application/users-service";
 import { UserInputModel } from "../../../src/users/types/UserInputModel";
 import {
-  nodemailerApplication,
-  nodemailerService,
+  NodemailerService,
+  NodemailerService,
 } from "../../../src/login/nodemaierService/sendEmail";
 
 jest.setTimeout(30000);
@@ -21,7 +21,7 @@ describe("integration test for usersService", () => {
     await mongoTestServer.stop();
   });
 
-  const emailAdapterMock: jest.Mocked<nodemailerApplication> = {
+  const emailAdapterMock: jest.Mocked<NodemailerService> = {
     sendEmail: jest.fn(),
     confirmEmail: jest.fn(),
   };
@@ -35,8 +35,8 @@ describe("integration test for usersService", () => {
     let codeForTest = "testing code";
 
     it("sendEmail should called", async () => {
-      const spy = jest.spyOn(nodemailerService, "sendEmail");
-      const result = await nodemailerService.sendEmail(user.email, codeForTest);
+      const spy = jest.spyOn(NodemailerService, "sendEmail");
+      const result = await NodemailerService.sendEmail(user.email, codeForTest);
 
       expect(spy).toHaveBeenCalled();
     });

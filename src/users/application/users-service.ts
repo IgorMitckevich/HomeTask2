@@ -1,37 +1,45 @@
 import { UserViewModel } from "../types/UserViewModel";
-import { usersRepository } from "../../composition-root";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
-import { bcryptService } from "../../composition-root";
-import { queryUsersRepositories } from "../../composition-root";
 import { usersCollectionDB } from "../types/users-collection-DB";
 import { randomUUID } from "node:crypto";
 import { add } from "date-fns";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
+import {inject, injectable} from "inversify";
+import {UsersRepository} from "../repositories/users-repository";
+import {BcryptService} from "../../login/application/bcrypt-service";
+import {QueryUsersRepositories} from "../repositories/query-user-repositories";
 
-export class usersApplication {
+@injectable()
+export class UsersService {
+  constructor(@inject(UsersRepository) protected usersRepository: UsersRepository,
+              @inject(QueryUsersRepositories) protected queryUsersRepositories: QueryUsersRepositories,
+              @inject(BcryptService) protected bcryptService: BcryptService) {
+
+  }
+
   async create(userDto: UserInputModel): Promise<WithId<UserViewModel> | null> {
-    const user = await queryUsersRepositories.getUserByEmail(userDto.email);
+    const user = await this.queryUsersRepositories.getUserByEmail(userDto.email);
     if (user) {
       return null;
     }
 
-    const passwordWithHash = await bcryptService.hashPassword(userDto.password);
+    const passwordWithHash = await this.bcryptService.hashPassword(userDto.password);
 
     const newUser: UserInputModel = {
       login: userDto.login,
       email: userDto.email,
       password: passwordWithHash,
     };
-    return usersRepository.create(newUser);
+    return this.usersRepository.create(newUser);
   }
   async deleteUser(userId: string): Promise<boolean> {
-    return await usersRepository.deleteUser(userId);
+    return await this.usersRepository.deleteUser(userId);
   }
   async createUserWithConfirmationAreas(
     userDto: UserInputModel,
   ): Promise<usersWithEmailConfirmation> {
-    const hashPassword = await bcryptService.hashPassword(userDto.password);
+    const hashPassword = await this.bcryptService.hashPassword(userDto.password);
     const newUser: usersCollectionDB = {
       id: new ObjectId().toString(),
       login: userDto.login,
@@ -47,16 +55,16 @@ export class usersApplication {
         isConfirmed: false,
       },
     };
-    return await usersRepository.createUserWithConformationAreas(newUser);
+    return await this.usersRepository.createUserWithConformationAreas(newUser);
   }
   async updateUserConfirmation(userId: string): Promise<void> {
-    return await usersRepository.upadeUserConfirmation(userId);
+    return await this.usersRepository.upadeUserConfirmation(userId);
   }
   async repeatSendingEmailConfirmationCode(
     id: string,
     confirmationCode: string,
   ) {
-    await usersRepository.repeatSendingConfirmationCode(id, confirmationCode);
+    await this.usersRepository.repeatSendingConfirmationCode(id, confirmationCode);
   }
 }
 

@@ -1,9 +1,15 @@
 import nodemailer from "nodemailer";
-import { queryUsersRepositories } from "../../composition-root";
-import { usersService } from "../../composition-root";
 import { SETTINGS } from "../../core/settings/settings";
+import {inject, injectable} from "inversify";
+import {QueryUsersRepositories} from "../../users/repositories/query-user-repositories";
+import {UsersService} from "../../users/application/users-service";
 
-export class nodemailerApplication {
+@injectable()
+export class NodemailerService {
+  constructor(@inject(QueryUsersRepositories) protected queryUsersRepositories: QueryUsersRepositories,
+              @inject(UsersService) protected usersService: UsersService) {
+
+  }
   async sendEmail(email: string, code: string) {
     try {
       let transport = nodemailer.createTransport({
@@ -30,7 +36,7 @@ export class nodemailerApplication {
     }
   }
   async confirmEmail(code: string): Promise<boolean | null> {
-    const findUser = await queryUsersRepositories.findUserByCode(code);
+    const findUser = await this.queryUsersRepositories.findUserByCode(code);
     if (!findUser) return null;
     if (
       (findUser.emailConfirmation.expirationDate as Date) < new Date() ||
@@ -39,7 +45,7 @@ export class nodemailerApplication {
       return null;
     }
 
-    await usersService.updateUserConfirmation(findUser.id);
+    await this.usersService.updateUserConfirmation(findUser.id);
     return true;
   }
 }

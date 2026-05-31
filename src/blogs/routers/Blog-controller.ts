@@ -1,11 +1,6 @@
 import {Request, Response} from "express";
 import {PaginatedOutput} from "../../core/types/Paginated-output";
 import {matchedData} from "express-validator";
-import {
-    blogsService,
-    queryBlogsRepositories,
-    queryPostsRepositories
-} from "../../composition-root";
 import {mapBlogsPaginated} from "./mappers/map-blogs-list-paginated-output";
 import {HttpStatus} from "../../core/https-statuses/httpStatuses";
 import {BlogInputModel, BlogViewModel} from "../types/blogersModel";
@@ -14,8 +9,23 @@ import {blogsMap} from "./mappers/blogsMap";
 import {PostsQueryInput} from "../../posts/types/posts-query-input";
 import {PostsPaginated} from "../../posts/types/postPaginated";
 import {mapPostsPaginated} from "../../posts/routers/mappers/map-posts-list-paginated-output";
+import {injectable,inject} from "inversify";
+import {BlogsService} from "../application/blogsService";
+import {QueryBlogsRepositories} from "../repositories/query-blogs-repositories";
+import {PostInputModel} from "../../posts/types/postsModel";
+import {postsMap} from "../../posts/routers/mappers/postsMap";
+import{PostViewModel} from "../../posts/types/postsModel";
+import {QueryPostsRepositories} from "../../posts/repositories/query-posts-repositories";
+import {PostsService} from "../../posts/application/posts.service";
 
+@injectable()
 export class BlogController{
+    constructor(@inject(BlogsService) protected blogsService:BlogsService,
+                @inject(QueryBlogsRepositories) protected queryBlogsRepositories:QueryBlogsRepositories,
+                @inject(QueryPostsRepositories) protected queryPostsRepositories:QueryPostsRepositories,
+                @inject(PostsService) protected postsService:PostsService){
+
+    }
     async findAllBlogs(
         req: Request<{}, {}, {}, PaginatedOutput>,
         res: Response,
@@ -25,7 +35,7 @@ export class BlogController{
             includeOptionals: true,
         });
         const queryInput = { ...sanitizedQuery };
-        const blogs = await queryBlogsRepositories.getAllBlogs(queryInput);
+        const blogs = await this.queryBlogsRepositories.getAllBlogs(queryInput);
         const BlogsViewModel = mapBlogsPaginated(
             blogs,
             queryInput.pageNumber,
@@ -43,7 +53,7 @@ export class BlogController{
             return;
         }
         const blogFind: WithId<BlogViewModel> | null =
-            await queryBlogsRepositories.getBlogById(blogsId);
+            await this.queryBlogsRepositories.getBlogById(blogsId);
 
         if (!blogFind) {
             res.sendStatus(HttpStatus.NotFound);
@@ -67,7 +77,7 @@ export class BlogController{
                 isMembership: false,
             };
 
-            const createBlog = await blogsService.create(newBlog);
+            const createBlog = await this.blogsService.create(newBlog);
             const BlogsViewModel = blogsMap(createBlog);
             res.status(HttpStatus.Created).send(BlogsViewModel);
         } catch (error) {
@@ -82,12 +92,12 @@ export class BlogController{
             const id = req.params.id as string;
 
             const FoundedBlog: WithId<BlogViewModel> | null =
-                await queryBlogsRepositories.getBlogById(id);
+                await this.queryBlogsRepositories.getBlogById(id);
             if (!FoundedBlog) {
                 res.sendStatus(HttpStatus.NotFound);
                 return;
             }
-            await blogsService.update(id, req.body);
+            await this.blogsService.update(id, req.body);
 
             res.sendStatus(HttpStatus.NoContent);
         } catch (error) {
@@ -101,7 +111,7 @@ export class BlogController{
         try {
             const blogsId = req.params.blogId;
 
-            const findBlog = await queryBlogsRepositories.getBlogById(blogsId);
+            const findBlog = await this.queryBlogsRepositories.getBlogById(blogsId);
             if (!findBlog) {
                 return res.sendStatus(HttpStatus.NotFound);
             }
@@ -111,7 +121,7 @@ export class BlogController{
             });
             const queryInput = { ...sanitizedQuery };
 
-            const posts = await queryPostsRepositories.getPostsByBlogId(
+            const posts = await this.queryPostsRepositories.getPostsByBlogId(
                 queryInput,
                 blogsId,
             );
@@ -135,15 +145,48 @@ export class BlogController{
             const id: string = req.params.id as string;
 
             const FoundedBlog: WithId<BlogViewModel> | null =
-                await queryBlogsRepositories.getBlogById(id);
+                await this.queryBlogsRepositories.getBlogById(id);
             if (!FoundedBlog) {
                 res.sendStatus(HttpStatus.NotFound);
                 return;
             }
 
-            await blogsService.delete(id);
+            await this.blogsService.delete(id);
             res.sendStatus(HttpStatus.NoContent);
         } catch (error) {
+            res.sendStatus(HttpStatus.InternalServerError);
+        }
+    }
+
+    async  createPostsByBlogId(
+        req: Request<{ blogId: string }, {}, PostInputModel>,
+        res: Response,
+    ): Promise<void> {
+        try {
+            const blogId = req.params.blogId;
+
+            const FoundedBlog = await this.queryBlogsRepositories.getBlogById(blogId);
+            if (!FoundedBlog) {
+                res.sendStatus(HttpStatus.NotFound);
+                return;
+            }
+
+            const newPost: PostViewModel = {
+                id: new ObjectId().toString(),
+                title: req.body.title,
+                shortDescription: req.body.shortDescription,
+                content: req.body.content,
+                blogId: FoundedBlog.id,
+                blogName: FoundedBlog.name,
+                createdAt: new Date().toISOString(),
+            };
+
+            const NEWPost = await this.postsService.create(newPost);
+            const postViewModel = postsMap(NEWPost);
+
+            res.status(HttpStatus.Created).send(postViewModel);
+            return;
+        } catch (err) {
             res.sendStatus(HttpStatus.InternalServerError);
         }
     }

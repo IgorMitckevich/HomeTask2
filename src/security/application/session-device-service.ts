@@ -1,8 +1,9 @@
 import {devicesCollection, expiredTokensCollection} from "../../db/mongo.db";
 import {DeviceDbModel} from "../types/device-DB-model";
+import {injectable} from "inversify";
 
-
-export class DeviceService{
+@injectable()
+export class DevicesService {
     async deleteSessionDevice(deviceId:string):Promise<void>{
        try{
            await expiredTokensCollection.deleteOne({deviceId});

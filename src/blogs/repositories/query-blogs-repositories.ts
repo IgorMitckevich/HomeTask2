@@ -2,7 +2,9 @@ import { PaginatedOutput } from "../../core/types/Paginated-output";
 import { WithId } from "mongodb";
 import { BlogViewModel } from "../types/blogersModel";
 import { blogsCollection } from "../../db/mongo.db";
+import {injectable} from "inversify";
 
+@injectable()
 export class QueryBlogsRepositories {
   async getAllBlogs(
     queryDto: PaginatedOutput,

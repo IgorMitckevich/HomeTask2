@@ -1,9 +1,12 @@
+import {injectable,inject} from "inversify";
 import { BlogInputModel, BlogViewModel } from "../types/blogersModel";
 import { WithId } from "mongodb";
 import {BlogsRepositories} from "../repositories/blogsRepositories";
 
+
+@injectable()
 export class BlogsService {
-  constructor(protected blogsRepositories: BlogsRepositories) {
+  constructor(@inject(BlogsRepositories) protected blogsRepositories: BlogsRepositories) {
 
   }
   async create(newBlog: BlogViewModel): Promise<WithId<BlogViewModel>> {

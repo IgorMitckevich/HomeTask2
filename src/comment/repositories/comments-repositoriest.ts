@@ -3,7 +3,9 @@ import { CommentViewModel } from "../types/CommentViewModel";
 import { ObjectId, WithId } from "mongodb";
 import { CommentInputModel } from "../types/CommentInputModel";
 import { AuthMe } from "../../login/type/MeViewModel";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepositories {
   async create(
     bodyDto: CommentInputModel,
