@@ -1,7 +1,7 @@
 import {Request,Response} from "express";
 import {HttpStatus} from "../../../core/https-statuses/httpStatuses";
 import {PasswordRecoveryInputModel} from "../../type/PasswordRecoveryInputModel";
-import {queryUsersRepositories} from "../../../common/composition-root";
+import {queryUsersRepositories} from "../../../composition-root";
 
 
 export const createPasswordRecovery = async (req: Request<{},{},PasswordRecoveryInputModel>, res: Response) => {

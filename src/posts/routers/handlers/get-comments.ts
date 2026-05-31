@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { queryCommentsRepositories } from "../../../common/composition-root";
+import { queryCommentsRepositories } from "../../../composition-root";
 import { matchedData } from "express-validator";
 import { PaginatedOutput } from "../../../core/types/Paginated-output";
 import { mapCommentsPagination } from "../mappers/map-comments";
-import { queryPostsRepositories } from "../../../common/composition-root";
+import { queryPostsRepositories } from "../../../composition-root";
 
 export const getCommentsByPostId = async (
   req: Request<{ postId: string }, {}, {}, PaginatedOutput>,

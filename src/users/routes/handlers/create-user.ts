@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { UserInputModel } from "../../types/UserInputModel";
-import { usersService } from "../../../common/composition-root";
+import { usersService } from "../../../composition-root";
 import { mapForCreatedUsers } from "../mappers/map-for-newUser";
 
 export const createUser = async (

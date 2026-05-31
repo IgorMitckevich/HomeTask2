@@ -1,9 +1,9 @@
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { UserInputModel } from "../../../users/types/UserInputModel";
-import { usersService } from "../../../common/composition-root";
+import { usersService } from "../../../composition-root";
 import { Request, Response } from "express";
-import { queryUsersRepositories } from "../../../common/composition-root";
-import { nodemailerService } from "../../../common/composition-root";
+import { queryUsersRepositories } from "../../../composition-root";
+import { nodemailerService } from "../../../composition-root";
 import { createErrorsMessages } from "../../../core/middlewares/validation/inputValidationBlogs";
 
 export const createRegistration = async (

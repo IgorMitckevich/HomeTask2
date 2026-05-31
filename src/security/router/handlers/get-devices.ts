@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import {HttpStatus} from "../../../core/https-statuses/httpStatuses";
-import {queryDeviceRepositories} from "../../../common/composition-root";
-import {jwtService} from "../../../common/composition-root";
+import {queryDeviceRepositories} from "../../../composition-root";
+import {jwtService} from "../../../composition-root";
 
 
 export const getDevices=async (request:Request,response:Response)=>{

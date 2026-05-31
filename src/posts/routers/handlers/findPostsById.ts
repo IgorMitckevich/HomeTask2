@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { PostViewModel } from "../../types/postsModel";
 import { WithId } from "mongodb";
-import { queryPostsRepositories } from "../../../common/composition-root";
+import { queryPostsRepositories } from "../../../composition-root";
 
 export async function findPostsById(req: Request, res: Response) {
   const id = req.params.id as string;

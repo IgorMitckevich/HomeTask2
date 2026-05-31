@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { usersService } from "../../../common/composition-root";
+import { usersService } from "../../../composition-root";
 
 export const deleteUser = async (
   req: Request<{ id: string }, {}, {}>,

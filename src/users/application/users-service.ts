@@ -1,9 +1,9 @@
 import { UserViewModel } from "../types/UserViewModel";
-import { usersRepository } from "../../common/composition-root";
+import { usersRepository } from "../../composition-root";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
-import { bcryptService } from "../../common/composition-root";
-import { queryUsersRepositories } from "../../common/composition-root";
+import { bcryptService } from "../../composition-root";
+import { queryUsersRepositories } from "../../composition-root";
 import { usersCollectionDB } from "../types/users-collection-DB";
 import { randomUUID } from "node:crypto";
 import { add } from "date-fns";

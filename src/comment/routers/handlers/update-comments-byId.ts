@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { queryCommentsRepositories } from "../../../common/composition-root";
+import { queryCommentsRepositories } from "../../../composition-root";
 import { CommentInputModel } from "../../types/CommentInputModel";
-import { commentsService } from "../../../common/composition-root";
+import { commentsService } from "../../../composition-root";
 
 export async function updateCommentById(
   req: Request<{ commentId: string }, {}, CommentInputModel>,

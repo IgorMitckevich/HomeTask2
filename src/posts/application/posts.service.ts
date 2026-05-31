@@ -1,6 +1,6 @@
 import { PostInputModel, PostViewModel } from "../types/postsModel";
 import { WithId } from "mongodb";
-import { postsRepositories } from "../../common/composition-root";
+import { postsRepositories } from "../../composition-root";
 
 export class PostsService {
   async create(newPosts: PostViewModel): Promise<WithId<PostViewModel>> {
