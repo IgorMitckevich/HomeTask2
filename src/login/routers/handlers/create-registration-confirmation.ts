@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RegistrationConfirmationCodeModel } from "../../type/Registration-confirmation-codeModel";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { nodemailerService } from "../../../common/composition-root";
+import { nodemailerService } from "../../../composition-root";
 import { createErrorsMessages } from "../../../core/middlewares/validation/inputValidationBlogs";
 
 export const createRegistrationConfirmation = async (

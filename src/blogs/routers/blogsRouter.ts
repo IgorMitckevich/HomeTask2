@@ -25,7 +25,7 @@ import {
   postsService,
   queryBlogsRepositories,
   queryPostsRepositories
-} from "../../common/composition-root";
+} from "../../composition-root";
 import {blogsMap} from "./mappers/blogsMap";
 import {HttpStatus} from "../../core/https-statuses/httpStatuses";
 import {PaginatedOutput} from "../../core/types/Paginated-output";

@@ -1,4 +1,4 @@
-import { commentsRepositories } from "../../common/composition-root";
+import { commentsRepositories } from "../../composition-root";
 import { CommentViewModel } from "../types/CommentViewModel";
 import { WithId } from "mongodb";
 import { CommentInputModel } from "../types/CommentInputModel";

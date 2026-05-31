@@ -1,7 +1,7 @@
 import{Request,Response} from 'express'
 import {HttpStatus} from "../../../core/https-statuses/httpStatuses";
-import {jwtService} from "../../../common/composition-root";
-import {sessionDeviceService} from "../../../common/composition-root";
+import {jwtService} from "../../../composition-root";
+import {sessionDeviceService} from "../../../composition-root";
 import {expiredTokensCollection} from "../../../db/mongo.db";
 
 

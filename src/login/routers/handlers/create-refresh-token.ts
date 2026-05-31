@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { refreshTokenService } from "../../../common/composition-root";
-import { jwtService } from "../../../common/composition-root";
+import { refreshTokenService } from "../../../composition-root";
+import { jwtService } from "../../../composition-root";
 import {devicesCollection} from "../../../db/mongo.db";
 
 export const createRefreshToken = async (

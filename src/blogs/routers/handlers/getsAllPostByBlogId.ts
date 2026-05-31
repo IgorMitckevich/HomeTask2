@@ -5,8 +5,8 @@ import { mapPostsPaginated } from "../../../posts/routers/mappers/map-posts-list
 import { PostsPaginated } from "../../../posts/types/postPaginated";
 import { PostsQueryInput } from "../../../posts/types/posts-query-input";
 import { matchedData } from "express-validator";
-import { queryBlogsRepositories } from "../../../common/composition-root";
-import { queryPostsRepositories } from "../../../common/composition-root";
+import { queryBlogsRepositories } from "../../../composition-root";
+import { queryPostsRepositories } from "../../../composition-root";
 
 export async function getAllPostsByBlogId(
   req: Request<{ blogId: string }, {}, {}, PostsQueryInput>,

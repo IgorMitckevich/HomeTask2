@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { BlogInputModel, BlogViewModel } from "../../types/blogersModel";
 import { blogsMap } from "../mappers/blogsMap";
 import { ObjectId } from "mongodb";
-import { blogsService } from "../../../common/composition-root";
+import { blogsService } from "../../../composition-root";
 
 export async function createBlog(
   req: Request<{}, {}, BlogInputModel>,

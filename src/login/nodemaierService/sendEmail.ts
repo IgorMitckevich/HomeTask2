@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { queryUsersRepositories } from "../../common/composition-root";
-import { usersService } from "../../common/composition-root";
+import { queryUsersRepositories } from "../../composition-root";
+import { usersService } from "../../composition-root";
 import { SETTINGS } from "../../core/settings/settings";
 
 export class nodemailerApplication {

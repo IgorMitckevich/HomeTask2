@@ -5,7 +5,7 @@ import {
     blogsService,
     queryBlogsRepositories,
     queryPostsRepositories
-} from "../../common/composition-root";
+} from "../../composition-root";
 import {mapBlogsPaginated} from "./mappers/map-blogs-list-paginated-output";
 import {HttpStatus} from "../../core/https-statuses/httpStatuses";
 import {BlogInputModel, BlogViewModel} from "../types/blogersModel";

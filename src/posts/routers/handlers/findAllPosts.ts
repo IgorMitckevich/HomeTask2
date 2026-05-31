@@ -3,7 +3,7 @@ import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { PaginatedOutput } from "../../../core/types/Paginated-output";
 import { matchedData } from "express-validator";
 import { mapPostsPaginated } from "../mappers/map-posts-list-paginated-output";
-import { queryPostsRepositories } from "../../../common/composition-root";
+import { queryPostsRepositories } from "../../../composition-root";
 
 export async function findAllPosts(req: Request, res: Response) {
   try {

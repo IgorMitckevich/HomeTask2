@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { CommentInputModel } from "../../../comment/types/CommentInputModel";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
-import { commentsService } from "../../../common/composition-root";
-import { queryUsersRepositories } from "../../../common/composition-root";
+import { commentsService } from "../../../composition-root";
+import { queryUsersRepositories } from "../../../composition-root";
 import { CommentViewModel } from "../../../comment/types/CommentViewModel";
-import { queryPostsRepositories } from "../../../common/composition-root";
+import { queryPostsRepositories } from "../../../composition-root";
 
 
 export async function createComments(

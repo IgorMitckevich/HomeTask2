@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/https-statuses/httpStatuses";
 import { RegistrationEmailResending } from "../../type/Registration-Email-Resending";
-import { queryUsersRepositories } from "../../../common/composition-root";
+import { queryUsersRepositories } from "../../../composition-root";
 import { randomUUID } from "node:crypto";
-import { usersService } from "../../../common/composition-root";
-import { nodemailerService } from "../../../common/composition-root";
+import { usersService } from "../../../composition-root";
+import { nodemailerService } from "../../../composition-root";
 import { createErrorsMessages } from "../../../core/middlewares/validation/inputValidationBlogs";
 
 export const createRegistrationEmailResendingRequest = async (
