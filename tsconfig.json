@@ -9,9 +9,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "moduleResolution":"nodenext",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "nodenext"
   },
   //  "files": ["index.d.ts"],
   "include": ["src/**/*"],

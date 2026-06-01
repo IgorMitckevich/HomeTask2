@@ -9,21 +9,21 @@ import {blogsMap} from "./mappers/blogsMap";
 import {PostsQueryInput} from "../../posts/types/posts-query-input";
 import {PostsPaginated} from "../../posts/types/postPaginated";
 import {mapPostsPaginated} from "../../posts/routers/mappers/map-posts-list-paginated-output";
-import {injectable,inject} from "inversify";
-import {BlogsService} from "../application/blogsService";
+import {inject, injectable} from "inversify";
 import {QueryBlogsRepositories} from "../repositories/query-blogs-repositories";
 import {PostInputModel} from "../../posts/types/postsModel";
 import {postsMap} from "../../posts/routers/mappers/postsMap";
-import{PostViewModel} from "../../posts/types/postsModel";
+import {BlogsService} from "../application/blogsService";
 import {QueryPostsRepositories} from "../../posts/repositories/query-posts-repositories";
 import {PostsService} from "../../posts/application/posts.service";
+import{PostViewModel} from "../../posts/types/postsModel";
 
 @injectable()
 export class BlogController{
-    constructor(@inject(BlogsService) protected blogsService:BlogsService,
-                @inject(QueryBlogsRepositories) protected queryBlogsRepositories:QueryBlogsRepositories,
-                @inject(QueryPostsRepositories) protected queryPostsRepositories:QueryPostsRepositories,
-                @inject(PostsService) protected postsService:PostsService){
+    constructor(@inject(QueryBlogsRepositories) protected queryBlogsRepositories: QueryBlogsRepositories,
+                @inject(BlogsService) protected blogsService: BlogsService,
+                @inject(QueryPostsRepositories) protected queryPostsRepositories: QueryPostsRepositories,
+                @inject(PostsService) protected postsService: PostsService,){
 
     }
     async findAllBlogs(
@@ -158,36 +158,36 @@ export class BlogController{
         }
     }
 
-    async  createPostsByBlogId(
-        req: Request<{ blogId: string }, {}, PostInputModel>,
-        res: Response,
-    ): Promise<void> {
-        try {
-            const blogId = req.params.blogId;
+ async  createPostsByBlogId(
+    req: Request<{ blogId: string }, {}, PostInputModel>,
+    res: Response,
+): Promise<void> {
+    try {
+        const blogId = req.params.blogId;
 
-            const FoundedBlog = await this.queryBlogsRepositories.getBlogById(blogId);
-            if (!FoundedBlog) {
-                res.sendStatus(HttpStatus.NotFound);
-                return;
-            }
-
-            const newPost: PostViewModel = {
-                id: new ObjectId().toString(),
-                title: req.body.title,
-                shortDescription: req.body.shortDescription,
-                content: req.body.content,
-                blogId: FoundedBlog.id,
-                blogName: FoundedBlog.name,
-                createdAt: new Date().toISOString(),
-            };
-
-            const NEWPost = await this.postsService.create(newPost);
-            const postViewModel = postsMap(NEWPost);
-
-            res.status(HttpStatus.Created).send(postViewModel);
+        const FoundedBlog = await this.queryBlogsRepositories.getBlogById(blogId);
+        if (!FoundedBlog) {
+            res.sendStatus(HttpStatus.NotFound);
             return;
-        } catch (err) {
-            res.sendStatus(HttpStatus.InternalServerError);
         }
+
+        const newPost: PostViewModel = {
+            id: new ObjectId().toString(),
+            title: req.body.title,
+            shortDescription: req.body.shortDescription,
+            content: req.body.content,
+            blogId: FoundedBlog.id,
+            blogName: FoundedBlog.name,
+            createdAt: new Date().toISOString(),
+        };
+
+        const NEWPost = await this.postsService.create(newPost);
+        const PostViewModel = postsMap(NEWPost);
+
+        res.status(HttpStatus.Created).send(PostViewModel);
+        return;
+    } catch (err) {
+        res.sendStatus(HttpStatus.InternalServerError);
     }
+}
 }

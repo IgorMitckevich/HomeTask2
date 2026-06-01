@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import {Container} from "inversify";
-import {BlogsRepositories} from "./blogs/repositories/blogsRepositories";
 import {QueryBlogsRepositories} from "./blogs/repositories/query-blogs-repositories";
 import {BlogsService} from "./blogs/application/blogsService";
 import {CommentsService} from "./comment/application/comments-service";
@@ -24,6 +23,7 @@ import {DeviceController} from "./security/router/device-controller";
 import {QueryDevicesRepositories} from "./security/repositories/query-devices-repositories";
 import {DevicesService} from "./security/application/session-device-service";
 import {RefreshTokenService} from "./login/application/refresh-token-service";
+import {BlogsRepositories} from "./blogs/repositories/blogsRepositories";
 
 
 export const container=new Container();
@@ -57,31 +57,3 @@ container.bind(RefreshTokenService).toSelf();
 container.bind(QueryDevicesRepositories).toSelf();
 container.bind(DevicesService).toSelf();
 container.bind(DeviceController).toSelf();
-// export const blogsRepositories=new BlogsRepositories()
-// export const queryBlogsRepositories=new QueryBlogsRepositories();
-// export const blogsService=new BlogsService(blogsRepositories);
-// export const blogController=new BlogController(blogsService,queryBlogsRepositories);
-
-// export const commentsRepositories=new CommentsRepositories();
-// export const queryCommentsRepositories=new QueryCommentsRepositories();
-// export const commentsService=new CommentsService(commentsRepositories);
-// export const commentsController=new CommentsController(commentsService,queryCommentsRepositories)
-
-
-// export const postsService=new PostsService();
-// export const postsRepositories=new PostsRepostirories();
-// export const queryPostsRepositories=new QueryPostsRepositories();
-
-
-
-// export const queryDeviceRepositories=new queryRepositories();
-// export const sessionDeviceService=new DeviceService();
-//
-// // export const usersService = new UsersService();
-// // export const queryUsersRepositories=new QueryUsersRepositories();
-// // export const usersRepository=new UsersRepository();
-//
-// export const bcryptService=new BcryptService();
-// export const jwtService=new JwtService();
-// export const refreshTokenService = new RefreshTokenService();
-// export const nodemailerService = new nodemailerService();

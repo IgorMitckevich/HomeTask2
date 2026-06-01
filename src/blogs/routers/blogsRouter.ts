@@ -10,14 +10,12 @@ import {
 } from "../../core/middlewares/validation/posts/posts.validation";
 import { BlogSortFields } from "../constants/blog-sort-fields";
 import { PostSortFields } from "../../posts/constants/post-sort-fields";
-
-import { container} from "../../composition-root";
 import {BlogController} from "./Blog-controller";
-
+import {container} from "../../composition-root";
 
 export const blogsRouter = express.Router();
 
-const blogController:BlogController=container.get(BlogController)
+const blogController=container.get(BlogController);
 
 blogsRouter
   .get("/", paginationAndSortingValidation(BlogSortFields), blogController.findAllBlogs.bind(blogController))
