@@ -23,6 +23,7 @@ import {Authentication} from "./login/routers/authentication";
 import {DeviceController} from "./security/router/device-controller";
 import {QueryDevicesRepositories} from "./security/repositories/query-devices-repositories";
 import {DevicesService} from "./security/application/session-device-service";
+import {RefreshTokenService} from "./login/application/refresh-token-service";
 
 
 export const container=new Container();
@@ -52,6 +53,7 @@ container.bind(UsersController).toSelf();
 container.bind(NodemailerService).toSelf();
 container.bind(Authentication).toSelf();
 
+container.bind(RefreshTokenService).toSelf();
 container.bind(QueryDevicesRepositories).toSelf();
 container.bind(DevicesService).toSelf();
 container.bind(DeviceController).toSelf();
