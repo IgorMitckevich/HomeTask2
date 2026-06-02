@@ -20,7 +20,16 @@ export const checkingEmail = body("email")
   .matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
   .withMessage("email must match the specified pattern");
 
-export const AuthInputValidation = [
-  loginOrEmailInputPassword,
-  AuthInputPassword,
-];
+export const checkingPassword=body("newPassword")
+    .exists()
+    .withMessage("newPassword required")
+    .isString()
+    .withMessage("newPassword must be a string value")
+    .isLength({ min: 6, max: 20 })
+    .withMessage("password length must be at least between 6 and 20 symbols");
+
+export const checkingRecoveryCode=body("recoveryCode")
+    .exists()
+    .withMessage("recoveryCode required")
+    .isString().withMessage("recoveryCode must be a string value")
+

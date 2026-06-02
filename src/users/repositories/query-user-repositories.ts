@@ -95,14 +95,14 @@ export class QueryUsersRepositories {
       createdAt: user.createdAt,
     };
   }
-  async findUserByCode(code: any) {
+  async findUserByCode(code: string) {
     const user = await usersCollection.findOne({
       "emailConfirmation.confirmationCode": code,
     });
 
     return user;
   }
-  async findByEmail(email: string): Promise<usersWithEmailConfirmation | null> {
+  async findByEmail(email: string) {
     const findUser = await usersCollection.findOne({ email: email });
     if (!findUser) {
       return null;
@@ -113,6 +113,25 @@ export class QueryUsersRepositories {
       email: findUser.email,
       createdAt: findUser.createdAt,
       emailConfirmation: findUser.emailConfirmation,
+      recovery:findUser.recovery
     };
   }
+  async findUserByRecoveryCode(recoveryCode:string){
+    return await usersCollection.findOne({
+      "recovery.recoveryCode":recoveryCode
+    })
+
+  }
+  async invalidateRecoveryCode(userId: string): Promise<void> {
+    await usersCollection.updateOne(
+        { id: userId },
+        {
+          $set: {
+            "recovery.recoveryCode": null,
+            "recovery.expirationDate": null
+          }
+        }
+    );
+  }
+
 }

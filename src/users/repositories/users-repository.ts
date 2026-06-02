@@ -5,6 +5,8 @@ import { UserInputModel } from "../types/UserInputModel";
 import { usersCollectionDB } from "../types/users-collection-DB";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 import {injectable} from "inversify";
+import {randomUUID} from "node:crypto";
+import {add} from "date-fns";
 
 @injectable()
 export class UsersRepository {
@@ -19,7 +21,10 @@ export class UsersRepository {
         confirmationCode: null,
         expirationDate: null,
         isConfirmed: true,
-      },
+      },recovery:{
+        recoveryCode: null,
+        expirationDate: null
+      }
     };
 
     const CreatedNewUser = await usersCollection.insertOne(newUserInputBD);
@@ -49,6 +54,7 @@ export class UsersRepository {
       email: user.email,
       createdAt: user.createdAt,
       emailConfirmation: user.emailConfirmation,
+      recovery:user.recovery
     });
 
     return {
@@ -59,7 +65,7 @@ export class UsersRepository {
       emailConfirmation: user.emailConfirmation,
     };
   }
-  async upadeUserConfirmation(userId: string): Promise<void> {
+  async updateUserConfirmation(userId: string): Promise<void> {
     await usersCollection.updateOne(
       { id: userId },
       { $set: { "emailConfirmation.isConfirmed": true } },
@@ -85,4 +91,20 @@ export class UsersRepository {
       emailConfirmation: findUser.emailConfirmation,
     };
   }
+  async updateUserPassword(userId:string, newPassword:string):Promise<void>{
+    await usersCollection.updateOne(
+    {id: userId},
+    {$set:{password:newPassword}}
+    )
+
+  }
+  async updateRecoveryCode(userId:string,recoveryCode:string,expirationDate:Date):Promise<void>{
+
+    await usersCollection.updateOne(
+        {id: userId},
+        {$set:{"recovery.recoveryCode":recoveryCode,"recovery.expirationDate":expirationDate}}
+    )
+
+  }
+
 }

@@ -3,7 +3,7 @@ import {LoginInputModel} from "../type/login-Input-model";
 import {HttpStatus} from "../../core/https-statuses/httpStatuses";
 import {ObjectId} from "mongodb";
 import {devicesCollection} from "../../db/mongo.db";
-import {PasswordRecoveryInputModel} from "../type/PasswordRecoveryInputModel";
+import {PasswordRecoveryInputModel} from "../type/Password-Recovery-Input-Model";
 import {UserInputModel} from "../../users/types/UserInputModel";
 import {createErrorsMessages} from "../../core/middlewares/validation/inputValidationBlogs";
 import {RegistrationConfirmationCodeModel} from "../type/Registration-confirmation-codeModel";
@@ -18,6 +18,7 @@ import {NodemailerService} from "../nodemaierService/sendEmail";
 import {QueryUsersRepositories} from "../../users/repositories/query-user-repositories";
 import {UsersService} from "../../users/application/users-service";
 import {IdType} from "../../common/id-type";
+import {NewPasswordRecoveryInput} from "../type/New-Password-Recovery-Input-Model";
 
 @injectable()
 export class Authentication{
@@ -92,19 +93,56 @@ export class Authentication{
         response.clearCookie("refreshToken", { httpOnly: true, secure: true });
         response.sendStatus(HttpStatus.NoContent);
     }
-    async createPasswordRecovery (req: Request<{},{},PasswordRecoveryInputModel>, res: Response)  {
+    async createPasswordRecovery (req: Request<{},{},PasswordRecoveryInputModel>, res: Response):Promise<void>  {
         try{
             const userEmail=req.body.email;
             const user=await this.queryUsersRepositories.findByEmail(userEmail);
             if(!user){
-                return res.status(HttpStatus.NotFound);
+                 res.sendStatus(HttpStatus.NoContent);
+                 return;
             }
 
+            const recoveryCode=randomUUID();
+            await this.usersService.updateRecoveryCode(user.id,recoveryCode);
+
+
+            await this.nodemailerService.sendRecoveryCodeOnEmail(
+                user.email,
+                user.recovery.recoveryCode)
 
             res.sendStatus(HttpStatus.NoContent);
         }
         catch(err){
             res.status(HttpStatus.InternalServerError).send(`password-recovery fault: ${err}`);
+        }
+    }
+
+    async createNewPassword(req:Request<{},{},NewPasswordRecoveryInput>,res:Response){
+        try{
+            const {newPassword,recoveryCode}=req.body;
+
+            const user=await this.queryUsersRepositories.findUserByRecoveryCode(recoveryCode);
+            if(!user){
+                return res.sendStatus(HttpStatus.NoContent);
+            }
+
+            if( typeof user.recovery.recoveryCode !=='string'||
+                !user.recovery.expirationDate||
+                user.recovery.expirationDate  < new Date())  {
+                console.log(`Recovery code expired`)
+                res.sendStatus(HttpStatus.BadRequest);
+                return;
+            }
+
+
+            await this.usersService.updateUserPassword(user.id,newPassword)
+            await this.queryUsersRepositories.invalidateRecoveryCode(user.id)
+
+
+            res.sendStatus(HttpStatus.NoContent);
+        }
+        catch(err){
+            res.status(HttpStatus.InternalServerError).send(`new password  not create, because endpoint was fault: ${err}`);
         }
     }
 

@@ -53,12 +53,15 @@ export class UsersService {
           minutes: 0,
         }),
         isConfirmed: false,
-      },
+      },recovery:{
+        recoveryCode: null,
+        expirationDate: null
+      }
     };
     return await this.usersRepository.createUserWithConformationAreas(newUser);
   }
   async updateUserConfirmation(userId: string): Promise<void> {
-    return await this.usersRepository.upadeUserConfirmation(userId);
+    return await this.usersRepository.updateUserConfirmation(userId);
   }
   async repeatSendingEmailConfirmationCode(
     id: string,
@@ -66,6 +69,24 @@ export class UsersService {
   ) {
     await this.usersRepository.repeatSendingConfirmationCode(id, confirmationCode);
   }
+  async updateUserPassword(userId:string, newPassword:string):Promise<void>{
+
+    const hashPassword = await this.bcryptService.hashPassword(newPassword);
+     await this.usersRepository.updateUserPassword(userId,hashPassword);
+
+  }
+  async updateRecoveryCode(userId:string,recoveryCode:string):Promise<void>{
+    const expirationDate:Date= add(new Date(), {hours: 2, minutes: 0,});
+
+    // const generateString=(length:number)=>{
+    //   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    //   return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    // // }
+    // const password=await this.bcryptService.hashPassword(generateString(10))
+    await this.usersRepository.updateRecoveryCode(userId,recoveryCode,expirationDate);
+
+  }
+
 }
 
 

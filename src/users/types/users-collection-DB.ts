@@ -9,4 +9,8 @@ export type usersCollectionDB = {
     expirationDate: Date | null;
     isConfirmed: boolean;
   };
+  recovery:{
+    recoveryCode: string|null;
+    expirationDate: Date | null;
+  };
 };

@@ -2,7 +2,7 @@ import express from "express";
 import { Login_Path } from "../../core/paths/paths";
 import { UsersInputValidation } from "../../users/middlewares/validation/validation-users";
 import { inputValidationResultMiddleware } from "../../core/middlewares/validation/inputValidationBlogs";
-import { checkingEmail } from "../middlewares/validation/validation";
+import {checkingEmail, checkingPassword, checkingRecoveryCode} from "../middlewares/validation/validation";
 import cookieParser from "cookie-parser";
 import {callCounting} from "../../setup-app";
 import {Authentication} from "./authentication";
@@ -48,5 +48,11 @@ loginRouter
     .post(Login_Path.auth.passwordRecovery
     ,callCounting
         ,checkingEmail
-        ,authentication.createPasswordRecovery.bind(authentication)
-    );
+        ,inputValidationResultMiddleware
+        ,authentication.createPasswordRecovery.bind(authentication))
+    .post(Login_Path.auth.newPassword
+    ,callCounting
+        ,checkingPassword
+        ,checkingRecoveryCode
+        ,inputValidationResultMiddleware
+    ,authentication.createNewPassword.bind(authentication))

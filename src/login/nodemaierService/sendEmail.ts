@@ -48,5 +48,32 @@ export class NodemailerService {
     await this.usersService.updateUserConfirmation(findUser.id);
     return true;
   }
+
+  async sendRecoveryCodeOnEmail(email:string, recoveryCode:string|null){
+    try{
+      let transport = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: SETTINGS.userMail,
+          pass: SETTINGS.userPass,
+        },
+      });
+
+      let info = await transport.sendMail({
+        from: "autotest test",
+        to: email,
+        subject: "Password recovery",
+        html: `
+            <h1>Password recovery</h1>
+            <p>To finish password recovery please follow the link below:
+            <a href='https://somesite.com/password-recovery?recoveryCode=${recoveryCode}'>recovery password</a>
+            </p>`,
+      });
+      console.log("Email sent:", info.messageId);
+    }
+    catch(err){
+      console.error("Recovery code for password sending on email. Result was fault ")
+    }
+  }
 }
 
