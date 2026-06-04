@@ -1,7 +1,7 @@
 import { UserViewModel } from "../types/UserViewModel";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
-import { usersCollectionDB } from "../types/users-collection-DB";
+import { UsersCollectionDB } from "../types/users-collection-d-b";
 import { randomUUID } from "node:crypto";
 import { add } from "date-fns";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
@@ -30,6 +30,7 @@ export class UsersService {
       login: userDto.login,
       email: userDto.email,
       password: passwordWithHash,
+
     };
     return this.usersRepository.create(newUser);
   }
@@ -40,7 +41,7 @@ export class UsersService {
     userDto: UserInputModel,
   ): Promise<usersWithEmailConfirmation> {
     const hashPassword = await this.bcryptService.hashPassword(userDto.password);
-    const newUser: usersCollectionDB = {
+    const newUser: UsersCollectionDB = {
       id: new ObjectId().toString(),
       login: userDto.login,
       email: userDto.email,
@@ -78,11 +79,6 @@ export class UsersService {
   async updateRecoveryCode(userId:string,recoveryCode:string):Promise<void>{
     const expirationDate:Date= add(new Date(), {hours: 2, minutes: 0,});
 
-    // const generateString=(length:number)=>{
-    //   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    //   return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-    // // }
-    // const password=await this.bcryptService.hashPassword(generateString(10))
     await this.usersRepository.updateRecoveryCode(userId,recoveryCode,expirationDate);
 
   }

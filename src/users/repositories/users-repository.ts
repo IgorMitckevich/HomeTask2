@@ -2,7 +2,7 @@ import { UserViewModel } from "../types/UserViewModel";
 import { usersCollection } from "../../db/mongo.db";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
-import { usersCollectionDB } from "../types/users-collection-DB";
+import { UsersCollectionDB } from "../types/users-collection-d-b";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 import {injectable} from "inversify";
 import {randomUUID} from "node:crypto";
@@ -20,7 +20,7 @@ export class UsersRepository {
       emailConfirmation: {
         confirmationCode: null,
         expirationDate: null,
-        isConfirmed: true,
+        isConfirmed: false,
       },recovery:{
         recoveryCode: null,
         expirationDate: null
@@ -45,7 +45,7 @@ export class UsersRepository {
     return true;
   }
   async createUserWithConformationAreas(
-    user: usersCollectionDB,
+    user: UsersCollectionDB,
   ): Promise<usersWithEmailConfirmation> {
     const newUser = await usersCollection.insertOne({
       id: user.id,
@@ -54,7 +54,9 @@ export class UsersRepository {
       email: user.email,
       createdAt: user.createdAt,
       emailConfirmation: user.emailConfirmation,
-      recovery:user.recovery
+      recovery:user.recovery|| {
+        recoveryCode: null,
+        expirationDate: null}
     });
 
     return {
@@ -74,7 +76,7 @@ export class UsersRepository {
   async repeatSendingConfirmationCode(
     id: string,
     confirmationCode: string,
-  ): Promise<usersWithEmailConfirmation | null> {
+  ){
     const updateUserCode = await usersCollection.updateOne(
       { id: id },
       { $set: { "emailConfirmation.confirmationCode": confirmationCode } },
@@ -89,20 +91,26 @@ export class UsersRepository {
       email: findUser.email,
       createdAt: findUser.createdAt,
       emailConfirmation: findUser.emailConfirmation,
+      recovery: findUser.recovery|| {
+        recoveryCode: null,
+        expirationDate: null}
     };
   }
   async updateUserPassword(userId:string, newPassword:string):Promise<void>{
     await usersCollection.updateOne(
     {id: userId},
-    {$set:{password:newPassword}}
+    {$set:{password:newPassword,
+      "recovery.recoveryCode": null,
+      "recovery.expirationDate": null}
+    }
     )
-
   }
   async updateRecoveryCode(userId:string,recoveryCode:string,expirationDate:Date):Promise<void>{
 
-    await usersCollection.updateOne(
+     await usersCollection.updateOne(
         {id: userId},
-        {$set:{"recovery.recoveryCode":recoveryCode,"recovery.expirationDate":expirationDate}}
+        {$set:{"recovery.recoveryCode":recoveryCode,
+            "recovery.expirationDate":expirationDate},}
     )
 
   }

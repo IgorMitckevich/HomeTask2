@@ -19,6 +19,7 @@ import {QueryUsersRepositories} from "../../users/repositories/query-user-reposi
 import {UsersService} from "../../users/application/users-service";
 import {IdType} from "../../common/id-type";
 import {NewPasswordRecoveryInput} from "../type/New-Password-Recovery-Input-Model";
+import {usersCollection} from "../../db/mongo.db";
 
 @injectable()
 export class Authentication{
@@ -101,14 +102,11 @@ export class Authentication{
                  res.sendStatus(HttpStatus.NoContent);
                  return;
             }
-
             const recoveryCode=randomUUID();
             await this.usersService.updateRecoveryCode(user.id,recoveryCode);
-
-
             await this.nodemailerService.sendRecoveryCodeOnEmail(
                 user.email,
-                user.recovery.recoveryCode)
+                recoveryCode)
 
             res.sendStatus(HttpStatus.NoContent);
         }
@@ -121,30 +119,43 @@ export class Authentication{
         try{
             const {newPassword,recoveryCode}=req.body;
 
+
             const user=await this.queryUsersRepositories.findUserByRecoveryCode(recoveryCode);
             if(!user){
-                return res.sendStatus(HttpStatus.NoContent);
+                return res.status(HttpStatus.BadRequest).send(
+                    createErrorsMessages([{ field: "recoveryCode", message: "invalid recovery code" }])
+                );
             }
 
-            if( typeof user.recovery.recoveryCode !=='string'||
-                !user.recovery.expirationDate||
+            if(!user.recovery.expirationDate||
                 user.recovery.expirationDate  < new Date())  {
-                console.log(`Recovery code expired`)
-                res.sendStatus(HttpStatus.BadRequest);
+                res.status(HttpStatus.BadRequest).send(createErrorsMessages([{ field: "recoveryCode", message: "invalid recovery code" }]));
+                return;
+            }
+            const isSamePassword = await this.bcryptService.checkPassword(newPassword, user.password);
+            if (isSamePassword) {
+                res.status(HttpStatus.BadRequest).send(
+                    createErrorsMessages([{ field: "newPassword", message: "password must be different" }])
+                );
                 return;
             }
 
 
             await this.usersService.updateUserPassword(user.id,newPassword)
-            await this.queryUsersRepositories.invalidateRecoveryCode(user.id)
+
+
+
 
 
             res.sendStatus(HttpStatus.NoContent);
-        }
-        catch(err){
-            res.status(HttpStatus.InternalServerError).send(`new password  not create, because endpoint was fault: ${err}`);
+        } catch(err) {
+            console.error('Create new password error:', err);
+            res.status(HttpStatus.InternalServerError).json({ error: "Internal server error" });
         }
     }
+
+
+
 
     async createRefreshToken(
         request: Request,

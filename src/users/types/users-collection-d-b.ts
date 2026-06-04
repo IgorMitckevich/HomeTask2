@@ -1,4 +1,4 @@
-export type usersCollectionDB = {
+export type UsersCollectionDB = {
   id: string;
   login: string;
   email: string;

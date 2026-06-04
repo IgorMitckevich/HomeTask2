@@ -7,7 +7,7 @@ import { Login_Path } from "../../../src/core/paths/paths";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import { queryUsersRepositories } from "../../../src/users/repositories/query-user-repositories";
-import { usersCollectionDB } from "../../../src/users/types/users-collection-DB";
+import { UsersCollectionDB } from "../../../src/users/types/users-collection-d-b";
 import { NodemailerService } from "../../../src/login/nodemaierService/sendEmail";
 import { beforeEach } from "node:test";
 
@@ -26,7 +26,7 @@ describe("User API Tests", () => {
   beforeAll(async () => {
     await runDb("mongodb://localhost:27017/hometask_3");
 
-    const User_DB_First: usersCollectionDB = {
+    const User_DB_First: UsersCollectionDB = {
       id: new ObjectId().toString(),
       login: correctLogin,
       email: corectEmail,

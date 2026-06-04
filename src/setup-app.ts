@@ -36,7 +36,6 @@ export const setupApp = async (app: Express) => {
 export async function callCounting(req:Request, res:Response, next:NextFunction)  {
 
   try {
-    // const ip = req.headers['x-forwarded-for'] as string || req.ip as string;
     const forwarded = req.headers['x-forwarded-for'];
     const ip = (Array.isArray(forwarded)
             ? forwarded[0]
@@ -45,7 +44,6 @@ export async function callCounting(req:Request, res:Response, next:NextFunction)
         ?? 'unknown';
     const url = req.originalUrl;
 
-    await rateLimitCollection.insertOne({IP:ip,URL:url,date:new Date()})
 
   const tenSecondsAgo=new Date(Date.now()-10*1000);
   const requestCount=await rateLimitCollection.countDocuments({
@@ -53,10 +51,13 @@ export async function callCounting(req:Request, res:Response, next:NextFunction)
     URL:url,
     date:{$gte:tenSecondsAgo}
   });
-
-    if (requestCount>5){
+    if (requestCount>=5){
     return res.sendStatus(429);
   }
+
+
+    await rateLimitCollection.insertOne({IP:ip,URL:url,date:new Date()})
+
   next()
   }catch(err){
     console.log(`catch error in callCounting:${err}`);

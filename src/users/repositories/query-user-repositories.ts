@@ -6,6 +6,7 @@ import { AuthMe } from "../../login/type/MeViewModel";
 import { usersWithEmailConfirmation } from "../types/user-with-EmailConfirmation";
 import {inject, injectable} from "inversify";
 import {BcryptService} from "../../login/application/bcrypt-service";
+import {UsersCollectionDB} from "../types/users-collection-d-b";
 
 @injectable()
 export class QueryUsersRepositories {
@@ -113,25 +114,29 @@ export class QueryUsersRepositories {
       email: findUser.email,
       createdAt: findUser.createdAt,
       emailConfirmation: findUser.emailConfirmation,
-      recovery:findUser.recovery
+      recovery: findUser.recovery || {
+        recoveryCode: null,
+        expirationDate: null
+      }
     };
   }
   async findUserByRecoveryCode(recoveryCode:string){
-    return await usersCollection.findOne({
+    const user= await usersCollection.findOne({
       "recovery.recoveryCode":recoveryCode
     })
+    if (!user) {
+      return null;
+    }
+    if (!user.recovery) {
+      user.recovery = {
+        recoveryCode: null,
+        expirationDate: null
+      };
+    }
+    return user
 
   }
-  async invalidateRecoveryCode(userId: string): Promise<void> {
-    await usersCollection.updateOne(
-        { id: userId },
-        {
-          $set: {
-            "recovery.recoveryCode": null,
-            "recovery.expirationDate": null
-          }
-        }
-    );
-  }
+
+
 
 }

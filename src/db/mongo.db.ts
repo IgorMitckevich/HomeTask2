@@ -4,7 +4,7 @@ import { PostViewModel } from "../posts/types/postsModel";
 import { SETTINGS } from "../core/settings/settings";
 import { UserViewModelWithPassword } from "../users/types/UserViewModelWithPassword";
 import { CommentsDB } from "../comment/types/typeCommentsDB";
-import { usersCollectionDB } from "../users/types/users-collection-DB";
+import { UsersCollectionDB } from "../users/types/users-collection-d-b";
 import { ExpiresToken } from "../login/type/expired-token-type";
 import {UserViewModel} from "../users/types/UserViewModel";
 import {DeviceViewModel} from "../security/types/device-view-model";
@@ -22,7 +22,7 @@ const RATE_LIMIT_COLLECTION_NAME = "rateLimit";
 export let client: MongoClient;
 export let blogsCollection: Collection<BlogViewModel>;
 export let postsCollection: Collection<PostViewModel>;
-export let usersCollection: Collection<usersCollectionDB>;
+export let usersCollection: Collection<UsersCollectionDB>;
 export let commentsCollection: Collection<CommentsDB>;
 export let expiredTokensCollection: Collection<ExpiresToken>;
 export let devicesCollection:Collection<DeviceDbModel>;
@@ -34,7 +34,7 @@ export async function runDb(url: string): Promise<void> {
 
   blogsCollection = db.collection<BlogViewModel>(BLOGS_COLLECTION_NAME);
   postsCollection = db.collection<PostViewModel>(POSTS_COLLECTION_NAME);
-  usersCollection = db.collection<usersCollectionDB>(USERS_COLLECTION_NAME);
+  usersCollection = db.collection<UsersCollectionDB>(USERS_COLLECTION_NAME);
   commentsCollection = db.collection<CommentsDB>(COMMENTS_COLLECTION_NAME);
   expiredTokensCollection = db.collection<ExpiresToken>(
     EXPIRED_TOKENS_COLLECTION_NAME,

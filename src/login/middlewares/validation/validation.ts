@@ -32,4 +32,15 @@ export const checkingRecoveryCode=body("recoveryCode")
     .exists()
     .withMessage("recoveryCode required")
     .isString().withMessage("recoveryCode must be a string value")
+    .custom((value) => {
+        if (value === "null" || value === "undefined" || value === "") {
+            throw new Error("recoveryCode is invalid");
+        }
+        return true;
+    });
+
+export const checkPasswordAndRecoveryCode=[
+    checkingPassword,
+    checkingRecoveryCode,
+]
 
