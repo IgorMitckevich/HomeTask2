@@ -1,5 +1,5 @@
 import { UserViewModel } from "../types/UserViewModel";
-import { usersCollection } from "../../db/mongo.db";
+import {UserModel} from "../../db/mongo.db";
 import { ObjectId, WithId } from "mongodb";
 import { UserInputModel } from "../types/UserInputModel";
 import { UsersCollectionDB } from "../types/users-collection-d-b";
@@ -27,18 +27,18 @@ export class UsersRepository {
       }
     };
 
-    const CreatedNewUser = await usersCollection.insertOne(newUserInputBD);
+    const CreatedNewUser = await UserModel.insertMany(newUserInputBD);
 
     return {
       id: newUserInputBD.id,
-      _id: CreatedNewUser.insertedId,
+      _id: CreatedNewUser[0]._id,
       login: newUserInputBD.login,
       email: newUserInputBD.email,
       createdAt: newUserInputBD.createdAt,
     };
   }
   async deleteUser(userId: string): Promise<boolean> {
-    const deleteUserById = await usersCollection.deleteOne({ id: userId });
+    const deleteUserById = await UserModel.deleteOne({ id: userId });
     if (deleteUserById.deletedCount < 1) {
       return false;
     }
@@ -47,7 +47,7 @@ export class UsersRepository {
   async createUserWithConformationAreas(
     user: UsersCollectionDB,
   ): Promise<usersWithEmailConfirmation> {
-    const newUser = await usersCollection.insertOne({
+    const newUser = await UserModel.insertMany({
       id: user.id,
       login: user.login,
       password: user.password,
@@ -68,7 +68,7 @@ export class UsersRepository {
     };
   }
   async updateUserConfirmation(userId: string): Promise<void> {
-    await usersCollection.updateOne(
+    await UserModel.updateOne(
       { id: userId },
       { $set: { "emailConfirmation.isConfirmed": true } },
     );
@@ -77,11 +77,11 @@ export class UsersRepository {
     id: string,
     confirmationCode: string,
   ){
-    const updateUserCode = await usersCollection.updateOne(
+    const updateUserCode = await UserModel.updateOne(
       { id: id },
       { $set: { "emailConfirmation.confirmationCode": confirmationCode } },
     );
-    const findUser = await usersCollection.findOne({ id });
+    const findUser = await UserModel.findOne({ id }).lean();
     if (!findUser) {
       return null;
     }
@@ -97,7 +97,7 @@ export class UsersRepository {
     };
   }
   async updateUserPassword(userId:string, newPassword:string):Promise<void>{
-    await usersCollection.updateOne(
+    await UserModel.updateOne(
     {id: userId},
     {$set:{password:newPassword,
       "recovery.recoveryCode": null,
@@ -107,7 +107,7 @@ export class UsersRepository {
   }
   async updateRecoveryCode(userId:string,recoveryCode:string,expirationDate:Date):Promise<void>{
 
-     await usersCollection.updateOne(
+     await UserModel.updateOne(
         {id: userId},
         {$set:{"recovery.recoveryCode":recoveryCode,
             "recovery.expirationDate":expirationDate},}

@@ -1,4 +1,4 @@
-import { commentsCollection } from "../../db/mongo.db";
+import { CommentModel } from "../../db/mongo.db";
 import { CommentViewModel } from "../types/CommentViewModel";
 import { WithId } from "mongodb";
 import {injectable} from "inversify";
@@ -13,22 +13,22 @@ export class QueryCommentsRepositories {
     const filter: any = { postId: postId };
     const skip = (pageNumber - 1) * pageSize;
     const [items, totalCount] = await Promise.all([
-      commentsCollection
+      CommentModel
         .find(filter)
         .sort({ [sortBy]: sortDirection })
         .skip(skip)
         .limit(pageSize)
-        .toArray(),
-      commentsCollection.countDocuments(filter),
+        .lean(),
+      CommentModel.countDocuments(filter),
     ]);
 
     return { items, totalCount };
   }
   async getCommentById(id: string): Promise<WithId<CommentViewModel> | null> {
-    const comments = await commentsCollection.findOne(
+    const comments = await CommentModel.findOne(
       { id: id },
       { projection: { postId: 0 } },
-    );
+    ).lean();
     if (!comments) {
       return null;
     }

@@ -3,7 +3,7 @@ import {injectable,inject} from "inversify";
 import { QueryDevicesRepositories} from "../repositories/query-devices-repositories";
 import {Request, Response} from "express";
 import {HttpStatus} from "../../core/https-statuses/httpStatuses";
-import {expiredTokensCollection} from "../../db/mongo.db";
+import {ExpiredCollectionModel} from "../../db/mongo.db";
 import {JwtService} from "../../login/application/jwt-service";
 
 @injectable()
@@ -34,7 +34,7 @@ export class DeviceController {
             }
 
             await this.deviceService.deleteSessionDevice(deviceId)
-            await expiredTokensCollection.deleteOne({deviceId})
+            await ExpiredCollectionModel.deleteOne({deviceId})
             response.sendStatus(HttpStatus.NoContent)
         }
         catch(error){

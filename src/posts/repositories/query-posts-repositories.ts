@@ -1,7 +1,7 @@
 import { PaginatedOutput } from "../../core/types/Paginated-output";
 import { WithId } from "mongodb";
 import { PostViewModel } from "../types/postsModel";
-import { postsCollection } from "../../db/mongo.db";
+import { PostModel } from "../../db/mongo.db";
 import {injectable} from "inversify";
 
 @injectable()
@@ -17,19 +17,19 @@ export class QueryPostsRepositories {
       filter.name = { $regex: searchNameTerm, $options: "i" };
     }
     const [items, totalCount] = await Promise.all([
-      postsCollection
+      PostModel
         .find(filter)
         .sort({ [sortBy]: sortDirection })
         .skip(skip)
         .limit(pageSize)
-        .toArray(),
-      postsCollection.countDocuments(filter),
+        .lean(),
+      PostModel.countDocuments(filter),
     ]);
 
     return { items, totalCount };
   }
   async getPostById(id: string): Promise<WithId<PostViewModel> | null> {
-    return postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+    return PostModel.findOne({ id: id }, { projection: { _id: 0 } }).lean();
   }
   async getPostsByBlogId(
     queryDto: PaginatedOutput,
@@ -40,13 +40,13 @@ export class QueryPostsRepositories {
     const skip = (pageNumber - 1) * pageSize;
 
     const [items, totalCount] = await Promise.all([
-      postsCollection
+      PostModel
         .find(filter)
         .sort({ [sortBy]: sortDirection })
         .skip(skip)
         .limit(pageSize)
-        .toArray(),
-      postsCollection.countDocuments(filter),
+        .lean(),
+      PostModel.countDocuments(filter),
     ]);
     return { items, totalCount };
   }

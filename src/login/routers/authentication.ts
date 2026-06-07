@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {LoginInputModel} from "../type/login-Input-model";
 import {HttpStatus} from "../../core/https-statuses/httpStatuses";
 import {ObjectId} from "mongodb";
-import {devicesCollection} from "../../db/mongo.db";
+import {DeviceModel} from "../../db/mongo.db";
 import {PasswordRecoveryInputModel} from "../type/Password-Recovery-Input-Model";
 import {UserInputModel} from "../../users/types/UserInputModel";
 import {createErrorsMessages} from "../../core/middlewares/validation/inputValidationBlogs";
@@ -19,7 +19,7 @@ import {QueryUsersRepositories} from "../../users/repositories/query-user-reposi
 import {UsersService} from "../../users/application/users-service";
 import {IdType} from "../../common/id-type";
 import {NewPasswordRecoveryInput} from "../type/New-Password-Recovery-Input-Model";
-import {usersCollection} from "../../db/mongo.db";
+
 
 @injectable()
 export class Authentication{
@@ -53,7 +53,7 @@ export class Authentication{
                 checkAuthorized.id,deviceId
             );
             await this.refreshTokenService.insertNewRefreshToken(refreshToken);
-            await devicesCollection.insertOne({
+            await DeviceModel.insertMany({
                 userId:checkAuthorized.id,
                 deviceId:deviceId,
                 ip:req.ip||'unknown',
@@ -82,14 +82,14 @@ export class Authentication{
         if (!decodedToken) {
             return response.sendStatus(HttpStatus.Unauthorized);
         }
-        const deviceSession = await devicesCollection.findOne({ deviceId: decodedToken.deviceId });
+        const deviceSession = await DeviceModel.findOne({ deviceId: decodedToken.deviceId }).lean();
         if (!deviceSession) {
             return response.sendStatus(HttpStatus.Unauthorized);
         }
 
         await this.refreshTokenService.deleteRefreshToken(refreshToken);
 
-        await devicesCollection.deleteOne({deviceId: decodedToken.deviceId});
+        await DeviceModel.deleteOne({deviceId: decodedToken.deviceId});
 
         response.clearCookie("refreshToken", { httpOnly: true, secure: true });
         response.sendStatus(HttpStatus.NoContent);
@@ -176,7 +176,7 @@ export class Authentication{
             if (!payload) {
                 return response.sendStatus(HttpStatus.Unauthorized);
             }
-            const deviceSession = await devicesCollection.findOne({ deviceId: payload.deviceId });
+            const deviceSession = await DeviceModel.findOne({ deviceId: payload.deviceId }).lean();
             if (!deviceSession) {
                 return response.sendStatus(HttpStatus.Unauthorized);
             }
@@ -194,7 +194,7 @@ export class Authentication{
             const findRefreshToken =
                 await this.refreshTokenService.findRefreshToken(newRefreshToken);
 
-            await devicesCollection.updateOne(
+            await DeviceModel.updateOne(
                 { deviceId: deviceId },
                 {
                     $set: {

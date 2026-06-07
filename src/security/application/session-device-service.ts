@@ -1,4 +1,4 @@
-import {devicesCollection, expiredTokensCollection} from "../../db/mongo.db";
+import {DeviceModel, ExpiredCollectionModel} from "../../db/mongo.db";
 import {DeviceDbModel} from "../types/device-DB-model";
 import {injectable} from "inversify";
 
@@ -6,8 +6,8 @@ import {injectable} from "inversify";
 export class DevicesService {
     async deleteSessionDevice(deviceId:string):Promise<void>{
        try{
-           await expiredTokensCollection.deleteOne({deviceId});
-        await devicesCollection.deleteOne({deviceId});
+           await ExpiredCollectionModel.deleteOne({deviceId});
+        await DeviceModel.deleteOne({deviceId});
        } catch (error) {
            console.error('Error in deleteSessionDevice:', error);
            throw error;
@@ -15,8 +15,8 @@ export class DevicesService {
     }
     async deleteAllSessionDevices(deviceId:string):Promise<void>{
         try{
-            await expiredTokensCollection.deleteMany({deviceId:{$ne:deviceId}});
-        await devicesCollection.deleteMany({deviceId:{$ne:deviceId}});
+            await ExpiredCollectionModel.deleteMany({deviceId:{$ne:deviceId}});
+        await DeviceModel.deleteMany({deviceId:{$ne:deviceId}});
         }
         catch (error)
         {
@@ -25,7 +25,7 @@ export class DevicesService {
         }
     }
     async findDevice(deviceId:string):Promise<DeviceDbModel|null>{
-        return await devicesCollection.findOne({deviceId});
+        return await DeviceModel.findOne({deviceId});
 
     }
 }

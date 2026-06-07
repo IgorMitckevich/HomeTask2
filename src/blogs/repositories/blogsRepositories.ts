@@ -1,17 +1,17 @@
 import { BlogInputModel, BlogViewModel } from "../types/blogersModel";
-import { blogsCollection } from "../../db/mongo.db";
+import {BlogModel} from "../../db/mongo.db";
 import { WithId } from "mongodb";
 import {injectable} from "inversify";
 
 @injectable()
 export class BlogsRepositories {
   async create(newBlog: BlogViewModel): Promise<WithId<BlogViewModel>> {
-    const insertBlogs = await blogsCollection.insertOne(newBlog);
+    const insertBlogs = await BlogModel.insertMany(newBlog);
 
-    return { ...newBlog, _id: insertBlogs.insertedId };
+    return { ...newBlog, _id: insertBlogs[0]._id };
   }
   async update(id: string, blogsInputBody: BlogInputModel): Promise<void> {
-    const updateResult = await blogsCollection.updateOne(
+    const updateResult = await BlogModel.updateOne(
       { id: id },
       {
         $set: {
@@ -27,7 +27,7 @@ export class BlogsRepositories {
     return;
   }
   async delete(id: string): Promise<void> {
-    const deleteResult = await blogsCollection.deleteOne({ id: id });
+    const deleteResult = await BlogModel.deleteOne({ id: id });
     if (deleteResult.deletedCount < 1) {
       throw new Error("blogs not found");
     }

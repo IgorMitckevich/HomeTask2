@@ -1,8 +1,8 @@
 import express from "express";
 import { setupApp } from "./setup-app";
 import { SETTINGS } from "./core/settings/settings";
-import { expiredTokensCollection, runDb } from "./db/mongo.db";
-import { setInterval } from "node:timers";
+import { runDb } from "./db/mongo.db";
+
 // import dotenv from "dotenv";
 //
 // dotenv.config();

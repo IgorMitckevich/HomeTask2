@@ -14,7 +14,7 @@ import { usersRouter } from "./users/routes/users-router";
 import { loginRouter } from "./login/routers/login-router";
 import { comments_router } from "./comment/routers/comments-router";
 import {security_router} from "./security/router/security-device-router";
-import {rateLimitCollection} from "./db/mongo.db";
+import {RateLimitModel} from "./db/mongo.db";
 import {HttpStatus} from "./core/https-statuses/httpStatuses";
 
 export const setupApp = async (app: Express) => {
@@ -46,7 +46,7 @@ export async function callCounting(req:Request, res:Response, next:NextFunction)
 
 
   const tenSecondsAgo=new Date(Date.now()-10*1000);
-  const requestCount=await rateLimitCollection.countDocuments({
+  const requestCount=await RateLimitModel.countDocuments({
     IP:ip,
     URL:url,
     date:{$gte:tenSecondsAgo}
@@ -56,7 +56,7 @@ export async function callCounting(req:Request, res:Response, next:NextFunction)
   }
 
 
-    await rateLimitCollection.insertOne({IP:ip,URL:url,date:new Date()})
+    await RateLimitModel.insertMany({IP:ip,URL:url,date:new Date()})
 
   next()
   }catch(err){

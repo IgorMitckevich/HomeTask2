@@ -1,4 +1,4 @@
-import { usersCollection } from "../../db/mongo.db";
+import {UserModel} from "../../db/mongo.db";
 import { WithId } from "mongodb";
 import { UserViewModel } from "../types/UserViewModel";
 import { PaginatorInput } from "../types/Paginator-input";
@@ -37,29 +37,29 @@ export class QueryUsersRepositories {
     }
     const filter = searchConditions.length > 0 ? { $or: searchConditions } : {};
     const [items, totalCount] = await Promise.all([
-      usersCollection
+      UserModel
         .find(filter)
         .sort({ [sortBy]: sortDirection })
         .skip(skip)
         .limit(pageSize)
-        .toArray(),
-      usersCollection.countDocuments(filter),
+        .lean(),
+      UserModel.countDocuments(filter),
     ]);
 
     return { items, totalCount };
   }
   async getUserByEmail(email: string): Promise<boolean> {
-    const UserEmail = await usersCollection.findOne({ email: email });
+    const UserEmail = await UserModel.findOne({ email: email });
     if (UserEmail) {
       return true;
     }
     return false;
   }
   async getUserByID(id: string): Promise<AuthMe | null> {
-    const user = await usersCollection.findOne(
+    const user = await UserModel.findOne(
       { id: id },
       { projection: { password: 0 } },
-    );
+    ).lean();
     if (!user) {
       return null;
     }
@@ -74,7 +74,7 @@ export class QueryUsersRepositories {
     loginOrEmail: string,
     password: string,
   ): Promise<UserViewModel | null> {
-    const user = await usersCollection.findOne({
+    const user = await UserModel.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
     if (!user) {
@@ -97,14 +97,14 @@ export class QueryUsersRepositories {
     };
   }
   async findUserByCode(code: string) {
-    const user = await usersCollection.findOne({
+    const user = await UserModel.findOne({
       "emailConfirmation.confirmationCode": code,
-    });
+    }).lean();
 
     return user;
   }
   async findByEmail(email: string) {
-    const findUser = await usersCollection.findOne({ email: email });
+    const findUser = await UserModel.findOne({ email: email }).lean();
     if (!findUser) {
       return null;
     }
@@ -121,9 +121,9 @@ export class QueryUsersRepositories {
     };
   }
   async findUserByRecoveryCode(recoveryCode:string){
-    const user= await usersCollection.findOne({
+    const user= await UserModel.findOne({
       "recovery.recoveryCode":recoveryCode
-    })
+    }).lean();
     if (!user) {
       return null;
     }

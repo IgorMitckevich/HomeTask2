@@ -1,7 +1,7 @@
 import { PaginatedOutput } from "../../core/types/Paginated-output";
 import { WithId } from "mongodb";
 import { BlogViewModel } from "../types/blogersModel";
-import { blogsCollection } from "../../db/mongo.db";
+import {BlogModel} from "../../db/mongo.db";
 import {injectable} from "inversify";
 
 @injectable()
@@ -17,17 +17,17 @@ export class QueryBlogsRepositories {
       filter.name = { $regex: searchNameTerm, $options: "i" };
     }
     const [items, totalCount] = await Promise.all([
-      blogsCollection
+      BlogModel
         .find(filter)
         .sort({ [sortBy]: sortDirection })
         .skip(skip)
         .limit(pageSize)
-        .toArray(),
-      blogsCollection.countDocuments(filter),
+        .lean(),
+      BlogModel.countDocuments(filter),
     ]);
     return { items, totalCount };
   }
   async getBlogById(id: string): Promise<WithId<BlogViewModel> | null> {
-    return blogsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+    return BlogModel.findOne({ id: id }, { projection: { _id: 0 } });
   }
 }
